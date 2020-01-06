@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Android Room with a View - Kotlin</title>
+  <link rel="stylesheet" href="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/css.css">
+  <link rel="stylesheet" href="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/icon.css">
+  <link rel="stylesheet" href="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+<script src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/analytics.js"></script></head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" environment="web" category="null"></google-codelab-analytics>
+  <google-codelab codelab-gaid="" id="android-room-with-a-view-kotlin" environment="web" feedback-link="https://github.com/googlecodelabs/android-room-with-a-view/issues" selected="14" google-codelab-ready="" codelab-title="Android Room with a View - Kotlin" anayltics-ready="anayltics-ready"><div id="drawer"><div class="codelab-time-container"><div class="time-remaining" title="Time remaining"><i class="material-icons">access_time</i>2 mins remaining</div></div><div class="steps"><ol><li completed=""><a href="#0"><span class="step"><span>Introduction</span></span></a></li><li completed=""><a href="#1"><span class="step"><span>Create your app</span></span></a></li><li completed=""><a href="#2"><span class="step"><span>Update Gradle files</span></span></a></li><li completed=""><a href="#3"><span class="step"><span>Create an Entity</span></span></a></li><li completed=""><a href="#4"><span class="step"><span>Create the DAO</span></span></a></li><li completed=""><a href="#5"><span class="step"><span>The LiveData class</span></span></a></li><li completed=""><a href="#6"><span class="step"><span>Add a Room database</span></span></a></li><li completed=""><a href="#7"><span class="step"><span>Create the Repository</span></span></a></li><li completed=""><a href="#8"><span class="step"><span>Create the ViewModel</span></span></a></li><li completed=""><a href="#9"><span class="step"><span>Add XML layout</span></span></a></li><li completed=""><a href="#10"><span class="step"><span>Add a RecyclerView</span></span></a></li><li completed=""><a href="#11"><span class="step"><span>Populate the database</span></span></a></li><li completed=""><a href="#12"><span class="step"><span>Add NewWordActivity</span></span></a></li><li completed=""><a href="#13"><span class="step"><span>Connect with the data</span></span></a></li><li completed="" selected=""><a href="#14"><span class="step"><span>Summary</span></span></a></li><li><a href="#15"><span class="step"><span>Further explorations</span></span></a></li></ol></div><div class="metadata"><a target="_blank" href="https://github.com/googlecodelabs/android-room-with-a-view/issues"><i class="material-icons">bug_report</i> Report a mistake</a></div></div><div id="codelab-title"><div id="codelab-nav-buttons"><a href="https://codelabs.developers.google.com/" id="arrow-back"><i class="material-icons">close</i></a><a href="#" id="menu"><i class="material-icons">menu</i></a></div><h1 class="title">Android Room with a View - Kotlin</h1><div class="codelab-time-container"><div class="time-remaining" title="Time remaining"><i class="material-icons">access_time</i>2 mins remaining</div></div><devsite-user></devsite-user></div><div id="main"><div id="steps"><google-codelab-step label="Introduction" duration="5" step="1" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">1. Introduction</h2>
+        <p>The purpose of <a href="https://developer.android.com/topic/libraries/architecture/index.html" target="_blank">Architecture Components</a>
+ is to provide guidance on app architecture, with libraries for common 
+tasks like lifecycle management and data persistence. The Architecture 
+Component libraries are part of <a href="https://developer.android.com/jetpack" target="_blank">Android Jetpack</a>.</p>
+<p>Architecture components help you structure your app in a way that is 
+robust, testable, and maintainable with less boilerplate code. </p>
+<p>This is the Kotlin version of the codelab. The version in the Java programming language can be found <a href="https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#0" target="_blank">here</a>.</p>
+<p>If you run into any issues (code bugs, grammatical errors, unclear 
+wording, etc.) as you work through this codelab, please report the issue
+ via the <strong>Report a mistake</strong> link in the lower left corner of the codelab. </p>
+<h2 is-upgraded=""><strong>What are the recommended Architecture Components? </strong></h2>
+<p>To introduce the terminology, here is a short introduction to the 
+Architecture Components and how they work together. Note that this 
+codelab focuses on a subset of the components, namely LiveData, 
+ViewModel and Room. Each component is explained more as you use it. </p>
+<p>This diagram shows a basic form of the architecture:</p>
+<p class="image-container"><img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/a7da8f5ea91bac52.png"></p>
+<p><a href="https://developer.android.com/reference/androidx/room/Entity" target="_blank"><strong>Entity</strong></a><strong>:</strong> Annotated class that describes a database table when working with <a href="https://developer.android.com/topic/libraries/architecture/room" target="_blank">Room</a>. </p>
+<p><strong>SQLite database:</strong> On device storage. The Room persistence library creates and maintains this database for you. </p>
+<p><a href="https://developer.android.com/reference/androidx/room/Dao.html" target="_blank"><strong>DAO</strong></a><strong>:</strong>
+ Data access object. A mapping of SQL queries to functions. When you use
+ a DAO, you call the methods, and Room takes care of the rest. </p>
+<p><a href="https://developer.android.com/topic/libraries/architecture/room" target="_blank"><strong>Room database</strong></a><strong>:</strong> Simplifies database work and serves as an access point to the underlying SQLite database (hides <code>SQLiteOpenHelper)</code>. The Room database uses the DAO to issue queries to the SQLite database.</p>
+<p><strong>Repository:</strong> A class that you create that is primarily used to manage multiple data sources.</p>
+<p><a href="https://developer.android.com/topic/libraries/architecture/viewmodel" target="_blank"><strong>ViewModel</strong></a><strong>:</strong>
+ Acts as a communication center between the Repository (data) and the 
+UI. The UI no longer needs to worry about the origin of the data. 
+ViewModel instances survive Activity/Fragment recreation.</p>
+<p><a href="https://developer.android.com/topic/libraries/architecture/livedata" target="_blank"><strong>LiveData</strong></a><strong>: </strong>A data holder class that can be <a href="https://en.wikipedia.org/wiki/Observer_pattern" target="_blank">observed</a>. Always holds/caches the latest version of data, and notifies its observers when data has changed. <code>LiveData</code>
+ is lifecycle aware. UI components just observe relevant data and don't 
+stop or resume observation. LiveData automatically manages all of this 
+since it's aware of the relevant lifecycle status changes while 
+observing.</p>
+<aside class="special"><p>Looking for more? Check out the full <a href="https://developer.android.com/topic/libraries/architecture/guide.html" target="_blank">Guide to App Architecture</a>.</p>
+</aside>
+<h2 is-upgraded=""><strong>What you will build</strong></h2>
+<p>You will build an app that implements our <a href="https://developer.android.com/topic/libraries/architecture/guide.html" target="_blank">recommended architecture</a> using the Android Architecture Components. The sample app stores a list of words in a Room database and displays it in a <code>RecyclerView</code>. The app is bare bones but sufficiently complex that you can use it as a template to build upon. </p>
+<p>In this codelab, you build an app that does the following: </p>
+<ul>
+<li>Works with a database to get and save the data, and pre-populates the database with some words. </li>
+<li>Displays all the words in a <code>RecyclerView</code> in <code>MainActivity</code>.</li>
+<li>Opens a second activity when the user taps the + button. When the 
+user enters a word, adds the word to the database and the list. </li>
+</ul>
+<table>
+<tbody><tr><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 194.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/d4da895890891e9f.png"></p>
+</td><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 194.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/72a92cdf0e43f469.png"></p>
+</td><td colspan="1" rowspan="1"><p class="image-container"><img style="width: 194.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/231586bcd0902d06.png"></p>
+</td></tr>
+</tbody></table>
+<h2 is-upgraded=""><strong>RoomWordSample architecture overview</strong></h2>
+<p>The following diagram shows all the pieces of the app. Each of the 
+enclosing boxes (except for the SQLite database) represents a class that
+ you will create.</p>
+<p class="image-container"><img style="width: 558.50px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/1205d9f95688b35b.png"></p>
+<h2 class="checklist" is-upgraded=""><strong>What you'll learn</strong></h2>
+<ul class="checklist">
+<li>How to design and construct an app using the Architecture Components Room and Lifecycles libraries.</li>
+</ul>
+<p>There are a lot of steps to using the Architecture Components and 
+implementing the recommended architecture. The most important thing is 
+to create a mental model of what is going on, understanding how the 
+pieces fit together and how the data flows. As you work through this 
+codelab, don't just copy and paste the code, but try to start building 
+that inner understanding. </p>
+<h2 is-upgraded=""><strong>What you'll need</strong></h2>
+<ul>
+<li><a href="https://developer.android.com/studio/index.html" target="_blank">Android Studio 3.0 or later</a> and knowledge of how to use it. Make sure Android Studio is updated, as well as your SDK and Gradle. </li>
+<li>An Android device or emulator.</li>
+</ul>
+<p>You need to be familiar with Kotlin, object-oriented design concepts, and Android development fundamentals. In particular:</p>
+<ul>
+<li><code>RecyclerView</code> and adapters</li>
+<li>SQLite database and the SQLite query language</li>
+<li>Basic coroutines (If you're not familiar with coroutines, you can go through <a href="https://codelabs.developers.google.com/codelabs/kotlin-coroutines/#0" target="_blank">Using Kotlin Coroutines in your Android App</a>.)</li>
+</ul>
+<p>It also helps to be familiar with software architectural patterns 
+that separate data from the user interface, such as MVP or MVC. This 
+codelab implements the architecture defined in the <a href="https://developer.android.com/topic/libraries/architecture/guide.html" target="_blank">Guide to app architecture</a>.</p>
+<p>If you are not familiar with Kotlin, a version of this codelab is provided in the Java programming language <a href="https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#0" target="_blank">here</a>.</p>
+<p>This codelab is focused on Android Architecture Components. Off-topic
+ concepts and code are provided for you to simply copy and paste.</p>
+<p>This codelab provides all the code you need to build the complete app.</p>
+<aside class="special"><p>Note that the solution code is available as a <a href="https://github.com/googlecodelabs/android-room-with-a-view/archive/kotlin.zip" target="_blank">zip file</a> or <a href="https://github.com/googlecodelabs/android-room-with-a-view/tree/kotlin" target="_blank">github repo</a>. We encourage you to create the app from scratch and look at this code only if you get stuck.</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Create your app" duration="2" step="2" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">2. Create your app</h2>
+        <p>Open Android Studio and create an app as follows:</p>
+<ul>
+<li>Choose the Empty Activity.</li>
+<li>Call the app RoomWordSample</li>
+</ul>
+<p class="image-container"><img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/9b6cbaec81794071.png"></p>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Update Gradle files" duration="2" step="3" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">3. Update Gradle files</h2>
+        <p>You have to add the component libraries to your Gradle files. </p>
+<p>In your <code>build.gradle</code> (<strong>Module: app</strong>) make the following changes: </p>
+<p>Apply the <code>kapt</code> <a href="https://kotlinlang.org/docs/reference/kapt.html" target="_blank">annotation processor</a> Kotlin plugin by adding it <strong>after the other plugins</strong> defined on the top of your <code>build.gradle</code> (<strong>Module: app</strong>) file.</p>
+<pre><code><span class="pln">apply plugin</span><span class="pun">:</span><span class="pln"> </span><span class="str">'kotlin-kapt'</span></code></pre>
+<p>Add the <a href="https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.PackagingOptions.html" target="_blank"><code>packagingOptions</code></a> block inside the <code>android</code> block to exclude the <a href="https://github.com/Kotlin/kotlinx.atomicfu/blob/master/README.md" target="_blank">atomic functions module</a> from the package and prevent warnings.</p>
+<pre><code><span class="pln">android </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// other configuration (buildTypes, defaultConfig, etc.)</span><span class="pln">
+
+    packagingOptions </span><span class="pun">{</span><span class="pln">
+        exclude </span><span class="str">'META-INF/atomicfu.kotlin_module'</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Add the following code at the end of the <code>dependencies</code> block.</p>
+<pre><code><span class="com">// Room components</span><span class="pln">
+implementation </span><span class="str">"androidx.room:room-runtime:$rootProject.roomVersion"</span><span class="pln">
+implementation </span><span class="str">"androidx.room:room-ktx:$rootProject.roomVersion"</span><span class="pln">
+kapt </span><span class="str">"androidx.room:room-compiler:$rootProject.roomVersion"</span><span class="pln">
+androidTestImplementation </span><span class="str">"androidx.room:room-testing:$rootProject.roomVersion"</span><span class="pln">
+
+</span><span class="com">// Lifecycle components</span><span class="pln">
+implementation </span><span class="str">"androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"</span><span class="pln">
+kapt </span><span class="str">"androidx.lifecycle:lifecycle-compiler:$rootProject.archLifecycleVersion"</span><span class="pln">
+androidTestImplementation </span><span class="str">"androidx.arch.core:core-testing:$rootProject.androidxArchVersion"</span><span class="pln">
+
+</span><span class="com">// ViewModel Kotlin support</span><span class="pln">
+implementation </span><span class="str">"androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.archLifecycleVersion"</span><span class="pln">
+
+</span><span class="com">// Coroutines</span><span class="pln">
+api </span><span class="str">"org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"</span><span class="pln">
+
+</span><span class="com">// UI</span><span class="pln">
+implementation </span><span class="str">"com.google.android.material:material:$rootProject.materialVersion"</span><span class="pln">
+
+</span><span class="com">// Testing</span><span class="pln">
+androidTestImplementation </span><span class="str">"androidx.arch.core:core-testing:$rootProject.coreTestingVersion"</span></code></pre>
+<p>In your <code>build.gradle</code> (<strong>Project: RoomWordsSample</strong>) file, add the version numbers to the end of the file, as given in the code below.</p>
+<aside class="special"><p>Get the most current version numbers from the <a href="https://developer.android.com/topic/libraries/architecture/adding-components.html" target="_blank">Adding Components to your Project</a> page.</p>
+</aside>
+<pre><code><span class="pln">ext </span><span class="pun">{</span><span class="pln">
+    roomVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'2.2.1'</span><span class="pln">
+    archLifecycleVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'2.2.0-rc02'</span><span class="pln">
+    androidxArchVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">'2.1.0'</span><span class="pln">
+    coreTestingVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">"2.1.0"</span><span class="pln">
+    coroutines </span><span class="pun">=</span><span class="pln"> </span><span class="str">'1.3.2'</span><span class="pln">
+    materialVersion </span><span class="pun">=</span><span class="pln"> </span><span class="str">"1.0.0"</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Create an Entity" duration="3" step="4" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">4. Create an Entity</h2>
+        <p>The data for this app is words, and you will need a simple table to hold those values:</p>
+<p class="image-container"><img style="width: 334.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/85cfc6940626616c.png"></p>
+<p>Room allows you to create tables via an <a href="https://developer.android.com/training/data-storage/room/defining-data.html" target="_blank">Entity</a>. Let's do this now.</p>
+<p>Create a new Kotlin class file called <code>Word</code> containing the <code>Word</code> <a href="https://kotlinlang.org/docs/reference/data-classes.html" target="_blank">data class</a>.
+ This class will describe the Entity (which represents the SQLite table)
+ for your words. Each public property in the class represents a column 
+in the table. Room will ultimately use these properties to both create 
+the table and instantiate objects from rows in the database. </p>
+<p>Here is the code: </p>
+<pre><code><span class="pln">data </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="pln">val word</span><span class="pun">:</span><span class="pln"> </span><span class="typ">String</span><span class="pun">)</span></code></pre>
+<p>To make the <code>Word</code> class meaningful to a Room database, 
+you need to annotate it. Annotations identify how each part of this 
+class relates to an entry in the database. Room uses this information to
+ generate code.</p>
+<p>If you type the annotations yourself (instead of pasting), Android Studio will auto-import the annotation classes. Update your <code>Word</code> class with annotations as shown in this code:</p>
+<pre><code><span class="lit">@Entity</span><span class="pun">(</span><span class="pln">tableName </span><span class="pun">=</span><span class="pln"> </span><span class="str">"word_table"</span><span class="pun">)</span><span class="pln">
+</span><span class="kwd">class</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="lit">@PrimaryKey</span><span class="pln"> </span><span class="lit">@ColumnInfo</span><span class="pun">(</span><span class="pln">name </span><span class="pun">=</span><span class="pln"> </span><span class="str">"word"</span><span class="pun">)</span><span class="pln"> val word</span><span class="pun">:</span><span class="pln"> </span><span class="typ">String</span><span class="pun">)</span></code></pre>
+<aside class="warning"><p>If you pasted the code in, you can move the cursor to each highlighted error and use the <a href="https://developer.android.com/studio/intro/keyboard-shortcuts" target="_blank">"Project quick fix" keyboard shortcut</a>  (Alt+Enter on Windows/Linux, Option+Enter on Mac) to import classes quickly.</p>
+</aside>
+<p>Let's see what these annotations do:</p>
+<ul>
+<li><code>@Entity(tableName = </code><strong><code>"word_table"</code></strong><code>)</code><br>Each <code>@Entity</code>
+ class represents a SQLite table. Annotate your class declaration to 
+indicate that it's an entity. You can specify the name of the table if 
+you want it to be different from the name of the class. This names the 
+table "word_table".</li>
+<li><code>@PrimaryKey</code><br>Every entity needs a primary key. To keep things simple, each word acts as its own primary key.</li>
+<li><code>@ColumnInfo(name = </code><strong><code>"word"</code></strong><code>)</code><br>Specifies
+ the name of the column in the table if you want it to be different from
+ the name of the member variable. This names the column "word".</li>
+<li>Every property that's stored in the database needs to have public visibility, which is the Kotlin default.</li>
+</ul>
+<p>You can find a complete list of annotations in the <a href="https://developer.android.com/reference/kotlin/androidx/room/package-summary.html" target="_blank">Room package summary reference</a>.</p>
+<aside class="special"><p>See <a href="https://developer.android.com/training/data-storage/room/defining-data.html" target="_blank">Defining data using Room entities</a>.</p>
+</aside>
+<aside class="special"><p><strong>Tip: </strong>You can <a href="https://developer.android.com/reference/androidx/room/PrimaryKey.html" target="_blank">autogenerate</a> unique keys by annotating the primary key as follows:</p>
+<p><code>@Entity(tableName = "word_table")</code><br><code>public class Word {</code><br><br>    <code>@PrimaryKey(autoGenerate = true)</code><br>    <code>private int id;</code><br><br>    <code>@NonNull</code><br>    <code>private String word;</code><br>    <code>//..other fields, getters, setters</code><br><code>}</code></p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Create the DAO" duration="4" step="5" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">5. Create the DAO</h2>
+        <h2 is-upgraded=""><strong>What is the DAO?</strong></h2>
+<p>In the <a href="https://developer.android.com/training/data-storage/room/accessing-data.html" target="_blank">DAO</a>
+ (data access object), you specify SQL queries and associate them with 
+method calls. The compiler checks the SQL and generates queries from 
+convenience annotations for common queries, such as <code>@Insert</code>. Room uses the DAO to create a clean API for your code. </p>
+<p>The DAO must be an interface or abstract class. </p>
+<p>By default, all queries must be executed on a separate thread. </p>
+<p>Room has coroutines support, allowing your queries to be annotated with the <code>suspend</code> modifier and then called from a coroutine or from another suspension function.</p>
+<h2 is-upgraded=""><strong>Implement the DAO</strong></h2>
+<p>Let's write a DAO that provides queries for:</p>
+<ol type="1" start="1">
+<li>Getting all words ordered alphabetically</li>
+<li>Inserting a word</li>
+<li>Deleting all words</li>
+</ol>
+<p>Create a new Kotlin class file called <code>WordDao</code>. Copy and paste the following code into <code>WordDao</code> and fix the imports as necessary to make it compile.</p>
+<pre><code><span class="lit">@Dao</span><span class="pln">
+</span><span class="kwd">interface</span><span class="pln"> </span><span class="typ">WordDao</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+    </span><span class="lit">@Query</span><span class="pun">(</span><span class="str">"SELECT * from word_table ORDER BY word ASC"</span><span class="pun">)</span><span class="pln">
+    fun getAlphabetizedWords</span><span class="pun">():</span><span class="pln"> </span><span class="typ">List</span><span class="pun">&lt;</span><span class="typ">Word</span><span class="pun">&gt;</span><span class="pln">
+
+    </span><span class="lit">@Insert</span><span class="pun">(</span><span class="pln">onConflict </span><span class="pun">=</span><span class="pln"> </span><span class="typ">OnConflictStrategy</span><span class="pun">.</span><span class="pln">IGNORE</span><span class="pun">)</span><span class="pln">
+    suspend fun insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">)</span><span class="pln">
+
+    </span><span class="lit">@Query</span><span class="pun">(</span><span class="str">"DELETE FROM word_table"</span><span class="pun">)</span><span class="pln">
+    suspend fun deleteAll</span><span class="pun">()</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Let's walk through it:</p>
+<ol type="1" start="1">
+<li><code>WordDao</code> is an interface; DAOs must either be interfaces or abstract classes.</li>
+<li>The <code>@Dao</code> annotation identifies it as a DAO class for Room. </li>
+<li><code>suspend fun insert(word: Word)</code> : Declares a <a href="https://kotlinlang.org/docs/reference/coroutines/basics.html" target="_blank">suspend function</a> to insert one word.</li>
+<li>The <a href="https://developer.android.com/reference/androidx/room/Insert" target="_blank"><code>@Insert</code> annotation</a> is a special DAO method annotation where you don't have to provide any SQL! (There are also <a href="https://developer.android.com/reference/androidx/room/Delete" target="_blank"><code>@Delete</code></a> and <a href="https://developer.android.com/reference/androidx/room/Update" target="_blank"><code>@Update</code></a> annotations for deleting and updating rows, but you are not using them in this app.)</li>
+<li><code>onConflict = OnConflictStrategy.IGNORE</code>: The selected on
+ conflict strategy ignores a new word if it's exactly the same as one 
+already in the list. To know more about the available conflict 
+strategies, check out the <a href="https://developer.android.com/reference/androidx/room/OnConflictStrategy.html" target="_blank">documentation</a>.</li>
+<li><code>suspend fun deleteAll()</code>: Declares a suspend function to delete all the words.</li>
+<li>There is no convenience annotation for deleting multiple entities, so it's annotated with the generic <code>@Query</code>.</li>
+<li><a href="https://developer.android.com/reference/androidx/room/Query" target="_blank"><code>@Query</code></a><code>("DELETE FROM word_table")</code>:  <code>@Query</code>
+ requires that you provide a SQL query as a string parameter to the 
+annotation, allowing for complex read queries and other operations.</li>
+<li><strong><code>fun getAlphabetizedWords(): List&lt;Word&gt;</code></strong>: A method to get all the words and have it return a <code>List</code> of <code>Words</code>.</li>
+<li><code>@Query(</code><strong><code>"SELECT * from word_table ORDER BY word ASC"</code></strong><code>)</code>: Query that returns a list of words sorted in ascending order.</li>
+</ol>
+<aside class="special"><p>Learn more about <a href="https://developer.android.com/training/data-storage/room/accessing-data.html" target="_blank">Room DAOs</a>.</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="The LiveData class" duration="3" step="6" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">6. The LiveData class</h2>
+        <p>When data changes you usually want to take some action, such 
+as displaying the updated data in the UI. This means you have to observe
+ the data so that when it changes, you can react. </p>
+<p>Depending on how the data is stored, this can be tricky. Observing 
+changes to data across multiple components of your app can create 
+explicit, rigid dependency paths between the components. This makes 
+testing and debugging difficult, among other things.</p>
+<p><a href="https://developer.android.com/topic/libraries/architecture/livedata.html" target="_blank"><code>LiveData</code></a>, a <a href="https://developer.android.com/topic/libraries/architecture/lifecycle.html" target="_blank">lifecycle library </a>class for data observation, solves this problem. Use a return value of type <a href="https://developer.android.com/reference/androidx/lifecycle/LiveData.html" target="_blank"><code>LiveData</code></a> in your method description, and Room generates all necessary code to update the <code>LiveData</code> when the database is updated. </p>
+<aside class="special"><p><strong>Note:</strong> If you use <code>LiveData</code> independently from Room, you have to manage updating the data. <code>LiveData</code> has no publicly available methods to update the stored data. </p>
+<p>If you want to update data stored within <code>LiveData</code>, you must use  <a href="https://developer.android.com/reference/androidx/lifecycle/MutableLiveData.html" target="_blank"><code>MutableLiveData</code></a> instead of <code>LiveData</code>. The <code>MutableLiveData</code> class has two public methods that allow you to set the value of a <code>LiveData</code> object, <a href="https://developer.android.com/reference/android/arch/lifecycle/MutableLiveData.html#setValue(T)" target="_blank"><code>setValue(T)</code></a> and <a href="https://developer.android.com/reference/androidx/lifecycle/MutableLiveData.html#postValue(T)" target="_blank"><code>postValue(T)</code></a>. Usually, <code>MutableLiveData</code> is used within the <a href="https://developer.android.com/reference/androidx/lifecycle/ViewModel.html" target="_blank"><code>ViewModel</code></a>, and then the <code>ViewModel</code> only exposes immutable <code>LiveData</code> objects to the observers.</p>
+</aside>
+<p>In <code>WordDao</code>, change the <code>getAlphabetizedWords()</code> method signature so that the returned <code>List&lt;Word&gt;</code> is wrapped with <code>LiveData</code>.</p>
+<pre><code><span class="pln">   </span><span class="lit">@Query</span><span class="pun">(</span><span class="str">"SELECT * from word_table ORDER BY word ASC"</span><span class="pun">)</span><span class="pln">
+   fun getAlphabetizedWords</span><span class="pun">():</span><span class="pln"> </span><span class="typ">LiveData</span><span class="pun">&lt;</span><span class="typ">List</span><span class="pun">&lt;</span><span class="typ">Word</span><span class="pun">&gt;&gt;</span></code></pre>
+<p>Later in this codelab, you track data changes via an <code>Observer</code> in <code>MainActivity</code>. </p>
+<aside class="special"><p>See the <a href="https://developer.android.com/topic/libraries/architecture/livedata.html" target="_blank"><code>LiveData</code></a> documentation to learn more about other ways of using <code>LiveData</code>, or watch this <a href="https://www.youtube.com/watch?v=OMcDk2_4LSk&amp;index=8&amp;list=PLWz5rJ2EKKc9mxIBd0DRw9gwXuQshgmn2" target="_blank">Architecture Components: LifeData and Lifecycle</a> video.</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Add a Room database" duration="5" step="7" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">7. Add a Room database</h2>
+        <h2 is-upgraded="">What is a Room database<strong>?</strong></h2>
+<ul>
+<li>Room is a database layer on top of an SQLite database. </li>
+<li>Room takes care of mundane tasks that you used to handle with an <a href="https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html" target="_blank"><code>SQLiteOpenHelper</code></a>. </li>
+<li>Room uses the DAO to issue queries to its database.</li>
+<li>By default, to avoid poor UI performance, Room doesn't allow you to issue queries on the main thread. When Room queries return <a href="https://developer.android.com/topic/libraries/architecture/livedata" target="_blank"><code>LiveData</code></a>,  the queries are automatically run asynchronously on a background thread.</li>
+<li>Room provides compile-time checks of SQLite statements.</li>
+</ul>
+<h2 is-upgraded=""><strong>Implement the Room database</strong></h2>
+<p>Your Room database class must be abstract and extend <code>RoomDatabase</code>. Usually, you only need one instance of a Room database for the whole app.</p>
+<p>Let's make one now. Create a Kotlin class file called <code>WordRoomDatabase</code> and add this code to it:</p>
+<pre><code><span class="com">// Annotates class to be a Room Database with a table (entity) of the Word class</span><span class="pln">
+</span><span class="lit">@Database</span><span class="pun">(</span><span class="pln">entities </span><span class="pun">=</span><span class="pln"> arrayOf</span><span class="pun">(</span><span class="typ">Word</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">),</span><span class="pln"> version </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span><span class="pln"> exportSchema </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">)</span><span class="pln">
+</span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">abstract</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">RoomDatabase</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+   </span><span class="kwd">abstract</span><span class="pln"> fun wordDao</span><span class="pun">():</span><span class="pln"> </span><span class="typ">WordDao</span><span class="pln">
+
+   companion </span><span class="kwd">object</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Singleton prevents multiple instances of database opening at the</span><span class="pln">
+        </span><span class="com">// same time. </span><span class="pln">
+        </span><span class="lit">@Volatile</span><span class="pln">
+        </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">var</span><span class="pln"> INSTANCE</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pun">?</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pln">
+
+        fun getDatabase</span><span class="pun">(</span><span class="pln">context</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Context</span><span class="pun">):</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            val tempInstance </span><span class="pun">=</span><span class="pln"> INSTANCE
+            </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">tempInstance </span><span class="pun">!=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                </span><span class="kwd">return</span><span class="pln"> tempInstance
+            </span><span class="pun">}</span><span class="pln">
+            </span><span class="kwd">synchronized</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                val instance </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Room</span><span class="pun">.</span><span class="pln">databaseBuilder</span><span class="pun">(</span><span class="pln">
+                        context</span><span class="pun">.</span><span class="pln">applicationContext</span><span class="pun">,</span><span class="pln">
+                        </span><span class="typ">WordRoomDatabase</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">.</span><span class="pln">java</span><span class="pun">,</span><span class="pln"> 
+                        </span><span class="str">"word_database"</span><span class="pln">
+                    </span><span class="pun">).</span><span class="pln">build</span><span class="pun">()</span><span class="pln">
+                INSTANCE </span><span class="pun">=</span><span class="pln"> instance
+                </span><span class="kwd">return</span><span class="pln"> instance
+            </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Let's walk through the code:</p>
+<ol type="1" start="1">
+<li>The database class for Room must be <code>abstract</code> and extend <code>RoomDatabase</code></li>
+<li>You annotate the class to be a Room database with <code>@Database</code>
+ and use the annotation parameters to declare the entities that belong 
+in the database and set the version number. Each entity corresponds to a
+ table that will be created in the database. Database migrations are 
+beyond the scope of this codelab, so we set <code>exportSchema</code> to
+ false here to avoid a build warning. In a real app, you should consider
+ setting a directory for Room to use to export the schema so you can 
+check the current schema into your version control system.</li>
+<li>You make database provides its DAOs by creating an abstract "getter" method for each @Dao. </li>
+<li>We've defined a <a href="https://en.wikipedia.org/wiki/Singleton_pattern" target="_blank">singleton</a>, <code>WordRoomDatabase,</code> to prevent having multiple instances of the database opened at the same time. </li>
+<li><code>getDatabase</code> returns the singleton. It'll create the database the first time it's accessed, using Room's database builder to create a <a href="https://developer.android.com/reference/androidx/room/RoomDatabase.html" target="_blank"><code>RoomDatabase</code></a> object in the application context from the <code>WordRoomDatabase</code> class and names it <code>"word_database"</code>. </li>
+</ol>
+<aside class="special"><p><strong>Note: </strong>When you modify the database schema, you'll need to update the version number and define a migration strategy</p>
+<p>For a sample, a destroy and re-create strategy can be sufficient. 
+But, for a real app, you must implement a migration strategy. See <a href="https://medium.com/google-developers/understanding-migrations-with-room-f01e04b07929" target="_blank">Understanding migrations with Room</a>.</p>
+</aside>
+<aside class="warning"><p>In Android Studio, if you get errors when you paste code or during the build process, select <strong>Build &gt;Clean Project</strong>. Then select <strong>Build &gt; Rebuild Project</strong>,
+ and then build again. If you use the provided code, there should be no 
+errors at the points where you are instructed to build the app, but 
+there may be errors in-between.</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Create the Repository" duration="7" step="8" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">8. Create the Repository</h2>
+        <h2 is-upgraded=""><strong>What is a Repository?</strong></h2>
+<p>A repository class abstracts access to multiple data sources. The 
+repository is not part of the Architecture Components libraries, but is a
+ suggested best practice for code separation and architecture. A 
+Repository class provides a clean API for data access to the rest of the
+ application. </p>
+<p class="image-container"><img style="width: 496.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/205f2ed4ca5ff8fb.png"></p>
+<h2 is-upgraded=""><strong>Why use a Repository?</strong></h2>
+<p>A Repository manages queries and allows you to use multiple backends.
+  In the most common example, the Repository implements the logic for 
+deciding whether to fetch data from a network or use results cached in a
+ local database.</p>
+<h2 is-upgraded=""><strong>Implementing the Repository </strong></h2>
+<p>Create a Kotlin class file called <code>WordRepository</code> and paste the following code into it:</p>
+<pre><code><span class="com">// Declares the DAO as a private property in the constructor. Pass in the DAO</span><span class="pln">
+</span><span class="com">// instead of the whole database, because you only need access to the DAO</span><span class="pln">
+</span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordRepository</span><span class="pun">(</span><span class="kwd">private</span><span class="pln"> val wordDao</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordDao</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+    </span><span class="com">// Room executes all queries on a separate thread.</span><span class="pln">
+    </span><span class="com">// Observed LiveData will notify the observer when the data has changed.</span><span class="pln">
+    val allWords</span><span class="pun">:</span><span class="pln"> </span><span class="typ">LiveData</span><span class="pun">&lt;</span><span class="typ">List</span><span class="pun">&lt;</span><span class="typ">Word</span><span class="pun">&gt;&gt;</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> wordDao</span><span class="pun">.</span><span class="pln">getAlphabetizedWords</span><span class="pun">()</span><span class="pln">
+ 
+    suspend fun insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        wordDao</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>The main takeaways:</p>
+<ol type="1" start="1">
+<li>The DAO is passed into the repository constructor as opposed to the 
+whole database. This is because it only needs access to the DAO, since 
+the DAO contains all the read/write methods for the database. There's no
+ need to expose the entire database to the repository.</li>
+<li>The list of words is a public property. It's initialized by getting the <code>LiveData</code> list of words from Room; we can do this because of how we defined the <code>getAlphabetizedWords</code> method to return <code>LiveData</code> in the "The LiveData class" step. Room executes all queries on a separate thread. Then observed <code>LiveData</code> will notify the observer on the main thread when the data has changed.</li>
+<li>The <code>suspend</code> modifier tells the compiler that this needs to be called from a coroutine or another suspending function. </li>
+</ol>
+<aside class="special"><p>Repositories are meant to mediate between 
+different data sources. In this simple example, you only have one data 
+source, so the Repository doesn't do much. See the <a href="https://github.com/googlesamples/android-architecture-components/tree/master/BasicSample" target="_blank">BasicSample</a> for a more complex implementation.</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Create the ViewModel" duration="5" step="9" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">9. Create the ViewModel</h2>
+        <h2 is-upgraded=""><strong>What is a ViewModel?</strong></h2>
+<p>The <code>ViewModel</code>'s role is to provide data to the UI and survive configuration changes. A <code>ViewModel</code> acts as a communication center between the Repository and the UI. You can also use a <code>ViewModel</code> to share data between fragments. The ViewModel is part of the <a href="https://developer.android.com/topic/libraries/architecture/lifecycle.html" target="_blank">lifecycle library</a>.</p>
+<p class="image-container"><img style="width: 469.50px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/db13585697ba494f.png"></p>
+<p>For an introductory guide to this topic, see <a href="https://developer.android.com/topic/libraries/architecture/viewmodel.html" target="_blank"><code>ViewModel Overview</code></a> or the <a href="https://medium.com/androiddevelopers/viewmodels-a-simple-example-ed5ac416317e" target="_blank">ViewModels: A Simple Example</a> blog post.</p>
+<h2 is-upgraded=""><strong>Why use a ViewModel?</strong></h2>
+<p>A <code>ViewModel</code> holds your app's UI data in a 
+lifecycle-conscious way that survives configuration changes. Separating 
+your app's UI data from your <code>Activity</code> and <code>Fragment</code>
+ classes lets you better follow the single responsibility principle: 
+Your activities and fragments are responsible for drawing data to the 
+screen, while your <code>ViewModel</code> can take care of holding and processing all the data needed for the UI.</p>
+<p>In the <code>ViewModel</code>,  use <code>LiveData</code> for changeable data that the UI will use or display. Using <code>LiveData</code> has several benefits:</p>
+<ul>
+<li>You can put an observer on the data (instead of polling for changes) and only update the<br>the UI when the data actually changes.</li>
+<li>The Repository and the UI are completely separated by the <code>ViewModel</code>. </li>
+<li>There are no database calls from the <code>ViewModel</code> (this is all handled in the Repository), making the code more testable.<br></li>
+</ul>
+<h2 is-upgraded=""><strong>viewModelScope</strong></h2>
+<p>In Kotlin, all coroutines run inside a <a href="https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/-coroutine-scope/" target="_blank"><code>CoroutineScope</code></a>.
+ A scope controls the lifetime of coroutines through its job. When you 
+cancel the job of a scope, it cancels all coroutines started in that 
+scope. </p>
+<p>The AndroidX <code>lifecycle-viewmodel-ktx</code> library adds a <code>viewModelScope</code> as an extension function of the <code>ViewModel</code> class, enabling you to work with scopes.</p>
+<p>To find out more about working with coroutines in the ViewModel, check out Step 5 of the <a href="https://codelabs.developers.google.com/codelabs/kotlin-coroutines/index.html?index=..%2F..index#4" target="_blank">Using Kotlin Coroutines in your Android App</a> codelab or the <a href="https://medium.com/androiddevelopers/easy-coroutines-in-android-viewmodelscope-25bffb605471" target="_blank">Easy Coroutines in Android: viewModelScope blogpost</a>.</p>
+<h2 is-upgraded=""><strong>Implement the ViewModel</strong></h2>
+<p>Create a Kotlin class file for <code>WordViewModel</code> and add this code to it:</p>
+<pre><code><span class="com">// Class extends AndroidViewModel and requires application as a parameter.</span><span class="pln">
+</span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordViewModel</span><span class="pun">(</span><span class="pln">application</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Application</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">AndroidViewModel</span><span class="pun">(</span><span class="pln">application</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+    </span><span class="com">// The ViewModel maintains a reference to the repository to get data.</span><span class="pln">
+    </span><span class="kwd">private</span><span class="pln"> val repository</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordRepository</span><span class="pln">
+    </span><span class="com">// LiveData gives us updated words when they change.</span><span class="pln">
+    val allWords</span><span class="pun">:</span><span class="pln"> </span><span class="typ">LiveData</span><span class="pun">&lt;</span><span class="typ">List</span><span class="pun">&lt;</span><span class="typ">Word</span><span class="pun">&gt;&gt;</span><span class="pln">
+
+    init </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Gets reference to WordDao from WordRoomDatabase to construct</span><span class="pln">
+        </span><span class="com">// the correct WordRepository. </span><span class="pln">
+        val wordsDao </span><span class="pun">=</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pun">.</span><span class="pln">getDatabase</span><span class="pun">(</span><span class="pln">application</span><span class="pun">).</span><span class="pln">wordDao</span><span class="pun">()</span><span class="pln">
+        repository </span><span class="pun">=</span><span class="pln"> </span><span class="typ">WordRepository</span><span class="pun">(</span><span class="pln">wordsDao</span><span class="pun">)</span><span class="pln">
+        allWords </span><span class="pun">=</span><span class="pln"> repository</span><span class="pun">.</span><span class="pln">allWords
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="com">/**
+     * The implementation of insert() in the database is completely hidden from the UI.
+     * Room ensures that you're not doing any long running operations on 
+     * the main thread, blocking the UI, so we don't need to handle changing Dispatchers.
+     * ViewModels have a coroutine scope based on their lifecycle called 
+     * viewModelScope which we can use here.
+     */</span><span class="pln">
+    fun insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">)</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> viewModelScope</span><span class="pun">.</span><span class="pln">launch </span><span class="pun">{</span><span class="pln">
+        repository</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Here we've:</p>
+<ol type="1" start="1">
+<li>Created a class called <code>WordViewModel</code> that gets the <code>Application</code> as a parameter and extends <code>AndroidViewModel</code>. </li>
+<li>Added a private member variable to hold a reference to the repository. </li>
+<li>Added a public <code>LiveData</code> member variable to cache the list of words.</li>
+<li>Created an <code>init</code> block that gets a reference to the <code>WordDao</code> from the <code>WordRoomDatabase.</code></li>
+<li>In the <code>init</code> block, constructed the <code>WordRepository</code> based on the <code>WordRoomDatabase</code>. </li>
+<li>In the <code>init</code> block, initialized the <code>allWords</code> LiveData using the repository. </li>
+<li>Created a wrapper <code>insert()</code> method that calls the Repository's <code>insert()</code> method. In this way, the implementation of <code>insert()</code>
+ is encapsulated from the UI. We don't want insert to block the main 
+thread, so we're launching a new coroutine and calling the repository's 
+insert, which is a suspend function. As mentioned, ViewModels have a 
+coroutine scope based on their life cycle called <code>viewModelScope</code>, which we use here.</li>
+</ol>
+<aside class="warning"><p><strong>Warning</strong>: Don't keep a reference to a context that has a shorter lifecycle than your ViewModel! Examples are:</p>
+<ul>
+<li>Activity</li>
+<li>Fragment</li>
+<li>View</li>
+</ul>
+<p>Keeping a reference can cause a memory leak, e.g. the ViewModel has a
+ reference to a destroyed Activity! All these objects can be destroyed 
+by the operative system and recreated when there's a configuration 
+change, and this can happen many times during the lifecycle of a 
+ViewModel.</p>
+<p>If you need the application context (which has a lifecycle that lives as long as the application does), use <code>AndroidViewModel</code>, as shown in this codelab.</p>
+</aside>
+<aside class="warning"><p><strong>Important: </strong><code>ViewModel</code>s
+ don't survive the app's process being killed in the background when the
+ OS needs more resources. For UI data that needs to survive process 
+death due to running out of resources, you can use the <a href="https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate" target="_blank">Saved State module for ViewModels</a>. Learn more <a href="https://medium.com/google-developers/viewmodels-persistence-onsaveinstancestate-restoring-ui-state-and-loaders-fc7cc4a6c090" target="_blank">here</a>.</p>
+</aside>
+<aside class="special"><p>To learn more about <code>ViewModel</code> classes, watch the <a href="https://www.youtube.com/watch?v=5qlIPTDE274" target="_blank">Android Jetpack: ViewModel</a> video.</p>
+</aside>
+<aside class="special"><p>To learn more about coroutines, check out the <a href="https://codelabs.developers.google.com/codelabs/kotlin-coroutines/#0" target="_blank">Coroutines codelab</a>.</p>
+</aside>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Add XML layout" duration="3" step="10" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">10. Add XML layout</h2>
+        <p>Next, you need to add the XML layout for the list and items.</p>
+<p>This codelab assumes that you are familiar with creating layouts in XML, so we are just providing you with the code. </p>
+<p>Add a style for list items in <code>values/styles.xml</code>:</p>
+<pre><code><span class="com">&lt;!-- The default font for RecyclerView items is too small.
+The margin is a simple delimiter between the words. --&gt;</span><span class="pln">
+</span><span class="tag">&lt;style</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"word_title"</span><span class="tag">&gt;</span><span class="pln">
+   </span><span class="tag">&lt;item</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"android:layout_width"</span><span class="tag">&gt;</span><span class="pln">match_parent</span><span class="tag">&lt;/item&gt;</span><span class="pln">
+   </span><span class="tag">&lt;item</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"android:layout_marginBottom"</span><span class="tag">&gt;</span><span class="pln">8dp</span><span class="tag">&lt;/item&gt;</span><span class="pln">
+   </span><span class="tag">&lt;item</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"android:paddingLeft"</span><span class="tag">&gt;</span><span class="pln">8dp</span><span class="tag">&lt;/item&gt;</span><span class="pln">
+   </span><span class="tag">&lt;item</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"android:background"</span><span class="tag">&gt;</span><span class="pln">@android:color/holo_orange_light</span><span class="tag">&lt;/item&gt;</span><span class="pln">
+   </span><span class="tag">&lt;item</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"android:textAppearance"</span><span class="tag">&gt;</span><span class="pln">@android:style/TextAppearance.Large</span><span class="tag">&lt;/item&gt;</span><span class="pln">
+</span><span class="tag">&lt;/style&gt;</span></code></pre>
+<p>Add a <code>layout/recyclerview_item.xml</code> layout:</p>
+<pre><code><span class="pun">&lt;?</span><span class="pln">xml version</span><span class="pun">=</span><span class="str">"1.0"</span><span class="pln"> encoding</span><span class="pun">=</span><span class="str">"utf-8"</span><span class="pun">?&gt;</span><span class="pln">
+</span><span class="tag">&lt;LinearLayout</span><span class="pln"> </span><span class="atn">xmlns:android</span><span class="pun">=</span><span class="atv">"http://schemas.android.com/apk/res/android"</span><span class="pln">
+    </span><span class="atn">android:orientation</span><span class="pun">=</span><span class="atv">"vertical"</span><span class="pln"> </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="pln">
+    </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="tag">&gt;</span><span class="pln">
+
+    </span><span class="tag">&lt;TextView</span><span class="pln">
+        </span><span class="atn">android:id</span><span class="pun">=</span><span class="atv">"@+id/textView"</span><span class="pln">
+        </span><span class="atn">style</span><span class="pun">=</span><span class="atv">"</span><span class="lit">@style</span><span class="pun">/</span><span class="pln">word_title</span><span class="atv">"</span><span class="pln">
+        </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="pln">
+        </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+        </span><span class="atn">android:background</span><span class="pun">=</span><span class="atv">"@android:color/holo_orange_light"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+</span><span class="tag">&lt;/LinearLayout&gt;</span></code></pre>
+<p>In <code>layout/activity_main.xml</code>, replace the <code>TextView</code> with a <code>RecyclerView</code> and add a floating action button (FAB). Now your layout should look like this:</p>
+<pre><code><span class="pun">&lt;?</span><span class="pln">xml version</span><span class="pun">=</span><span class="str">"1.0"</span><span class="pln"> encoding</span><span class="pun">=</span><span class="str">"utf-8"</span><span class="pun">?&gt;</span><span class="pln">
+</span><span class="tag">&lt;androidx.constraintlayout.widget.ConstraintLayout</span><span class="pln">
+    </span><span class="atn">xmlns:android</span><span class="pun">=</span><span class="atv">"http://schemas.android.com/apk/res/android"</span><span class="pln">
+    </span><span class="atn">xmlns:app</span><span class="pun">=</span><span class="atv">"http://schemas.android.com/apk/res-auto"</span><span class="pln">
+    </span><span class="atn">xmlns:tools</span><span class="pun">=</span><span class="atv">"http://schemas.android.com/tools"</span><span class="pln">
+    </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="pln">
+    </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="tag">&gt;</span><span class="pln">
+
+    </span><span class="tag">&lt;androidx.recyclerview.widget.RecyclerView</span><span class="pln">
+        </span><span class="atn">android:id</span><span class="pun">=</span><span class="atv">"@+id/recyclerview"</span><span class="pln">
+        </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"0dp"</span><span class="pln">
+        </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"0dp"</span><span class="pln">
+        </span><span class="atn">android:background</span><span class="pun">=</span><span class="atv">"@android:color/darker_gray"</span><span class="pln">
+        </span><span class="atn">tools:listitem</span><span class="pun">=</span><span class="atv">"@layout/recyclerview_item"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintBottom_toBottomOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintLeft_toLeftOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintRight_toRightOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintTop_toTopOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+
+    </span><span class="tag">&lt;com.google.android.material.floatingactionbutton.FloatingActionButton</span><span class="pln">
+        </span><span class="atn">android:id</span><span class="pun">=</span><span class="atv">"@+id/fab"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintBottom_toBottomOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintEnd_toEndOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+        </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+        </span><span class="atn">android:layout_margin</span><span class="pun">=</span><span class="atv">"16dp"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+
+</span><span class="tag">&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;</span></code></pre>
+<p>Your FAB's appearance should correspond to the available action, so we will want to replace the icon with a '+' symbol.</p>
+<p>First, we need to add a new Vector Asset:</p>
+<ol type="1" start="1">
+<li>Select <strong>File &gt; New &gt; Vector Asset</strong>.</li>
+<li>Click the Android robot icon in the <strong>Clip Art: </strong>field.<br><img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/8d935457de8e7a46.png"></li>
+<li>Search for "add" and select the '+' asset. Click <strong>OK.<br></strong><img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/a5da3beb66e64439.png"></li>
+<li>After that click <strong>Next</strong>.<br><img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/672248bada3cfb25.png"></li>
+<li>Confirm the icon path as <code>main &gt; drawable</code> and click <strong>Finish</strong> to add the asset. <img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/ef118084f96c6176.png"></li>
+<li>Still in <code>layout/activity_main.xml</code>, update the FAB to include the new drawable:</li>
+</ol>
+<pre><code><span class="pln">    </span><span class="tag">&lt;com.google.android.material.floatingactionbutton.FloatingActionButton</span><span class="pln">
+        </span><span class="atn">android:id</span><span class="pun">=</span><span class="atv">"@+id/fab"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintBottom_toBottomOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">app:layout_constraintEnd_toEndOf</span><span class="pun">=</span><span class="atv">"parent"</span><span class="pln">
+        </span><span class="atn">android:src</span><span class="pun">=</span><span class="atv">"@drawable/ic_add_black_24dp"</span><span class="pln">
+        </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+        </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+        </span><span class="atn">android:layout_margin</span><span class="pun">=</span><span class="atv">"16dp"</span><span class="pln"> </span><span class="tag">/&gt;</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Add a RecyclerView" duration="3" step="11" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">11. Add a RecyclerView</h2>
+        <p>You are going to display the data in a <code>RecyclerView</code>, which is a little nicer than just throwing the data in a <code>TextView</code>. This codelab assumes that you know how <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html" target="_blank"><code>RecyclerView</code></a>, <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.LayoutManager.html" target="_blank"><code>RecyclerView.LayoutManager</code></a>, <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.ViewHolder.html" target="_blank"><code>RecyclerView.ViewHolder</code></a>, and <a href="https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter.html" target="_blank"><code>RecyclerView.Adapter</code></a> work. </p>
+<p>Note that the <code>words</code> variable in the adapter caches the data. In the next task, you add the code that updates the data automatically.</p>
+<p>Create a Kotlin class file for <code>WordListAdapter</code> that extends <code>RecyclerView.Adapter</code>. Here is the code. </p>
+<pre><code><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordListAdapter</span><span class="pln"> </span><span class="kwd">internal</span><span class="pln"> constructor</span><span class="pun">(</span><span class="pln">
+        context</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Context</span><span class="pln">
+</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">RecyclerView</span><span class="pun">.</span><span class="typ">Adapter</span><span class="pun">&lt;</span><span class="typ">WordListAdapter</span><span class="pun">.</span><span class="typ">WordViewHolder</span><span class="pun">&gt;()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+    </span><span class="kwd">private</span><span class="pln"> val inflater</span><span class="pun">:</span><span class="pln"> </span><span class="typ">LayoutInflater</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="typ">LayoutInflater</span><span class="pun">.</span><span class="kwd">from</span><span class="pun">(</span><span class="pln">context</span><span class="pun">)</span><span class="pln">
+    </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">var</span><span class="pln"> words </span><span class="pun">=</span><span class="pln"> emptyList</span><span class="pun">&lt;</span><span class="typ">Word</span><span class="pun">&gt;()</span><span class="pln"> </span><span class="com">// Cached copy of words</span><span class="pln">
+
+    inner </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordViewHolder</span><span class="pun">(</span><span class="pln">itemView</span><span class="pun">:</span><span class="pln"> </span><span class="typ">View</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">RecyclerView</span><span class="pun">.</span><span class="typ">ViewHolder</span><span class="pun">(</span><span class="pln">itemView</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        val wordItemView</span><span class="pun">:</span><span class="pln"> </span><span class="typ">TextView</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> itemView</span><span class="pun">.</span><span class="pln">findViewById</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">textView</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="kwd">override</span><span class="pln"> fun onCreateViewHolder</span><span class="pun">(</span><span class="pln">parent</span><span class="pun">:</span><span class="pln"> </span><span class="typ">ViewGroup</span><span class="pun">,</span><span class="pln"> viewType</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Int</span><span class="pun">):</span><span class="pln"> </span><span class="typ">WordViewHolder</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        val itemView </span><span class="pun">=</span><span class="pln"> inflater</span><span class="pun">.</span><span class="pln">inflate</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">layout</span><span class="pun">.</span><span class="pln">recyclerview_item</span><span class="pun">,</span><span class="pln"> parent</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">)</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">WordViewHolder</span><span class="pun">(</span><span class="pln">itemView</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="kwd">override</span><span class="pln"> fun onBindViewHolder</span><span class="pun">(</span><span class="pln">holder</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordViewHolder</span><span class="pun">,</span><span class="pln"> position</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Int</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        val current </span><span class="pun">=</span><span class="pln"> words</span><span class="pun">[</span><span class="pln">position</span><span class="pun">]</span><span class="pln">
+        holder</span><span class="pun">.</span><span class="pln">wordItemView</span><span class="pun">.</span><span class="pln">text </span><span class="pun">=</span><span class="pln"> current</span><span class="pun">.</span><span class="pln">word
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="kwd">internal</span><span class="pln"> fun setWords</span><span class="pun">(</span><span class="pln">words</span><span class="pun">:</span><span class="pln"> </span><span class="typ">List</span><span class="pun">&lt;</span><span class="typ">Word</span><span class="pun">&gt;)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">words </span><span class="pun">=</span><span class="pln"> words
+        notifyDataSetChanged</span><span class="pun">()</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="kwd">override</span><span class="pln"> fun getItemCount</span><span class="pun">()</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> words</span><span class="pun">.</span><span class="pln">size
+</span><span class="pun">}</span></code></pre>
+<p>Add the <code>RecyclerView</code> in the <code>onCreate()</code> method of <code>MainActivity</code>.</p>
+<p>In the <code>onCreate()</code> method after <code>setContentView</code>:</p>
+<pre><code><span class="pln">   val recyclerView </span><span class="pun">=</span><span class="pln"> findViewById</span><span class="pun">&lt;</span><span class="typ">RecyclerView</span><span class="pun">&gt;(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">recyclerview</span><span class="pun">)</span><span class="pln">
+   val adapter </span><span class="pun">=</span><span class="pln"> </span><span class="typ">WordListAdapter</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">)</span><span class="pln">
+   recyclerView</span><span class="pun">.</span><span class="pln">adapter </span><span class="pun">=</span><span class="pln"> adapter
+   recyclerView</span><span class="pun">.</span><span class="pln">layoutManager </span><span class="pun">=</span><span class="pln"> </span><span class="typ">LinearLayoutManager</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">)</span></code></pre>
+<p>Run your app to make sure everything works. There are no items, 
+because you have not hooked up the data yet, so the app should display a
+ gray background without any list items. </p>
+<p class="image-container"><img style="width: 301.19px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/ed3c60c64b2b2491.png"></p>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Populate the database" duration="2" step="12" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">12. Populate the database</h2>
+        <p>There is no data in the database. You will add data in two ways: Add some data when the database is opened, and add an <code>Activity</code> for adding words. </p>
+<p>To delete all content and repopulate the database whenever the app is started, you create a <a href="https://developer.android.com/reference/androidx/room/RoomDatabase.Callback.html" target="_blank"><code>RoomDatabase.Callback</code></a> and override <code>onOpen()</code>. Because you cannot do Room database operations on the UI thread, <code>onOpen()</code> launches a coroutine on the IO Dispatcher.  </p>
+<aside class="special"><p><strong>Note:</strong> If you only want to populate the database the first time the app is launched, you can override the <code>onCreate()</code> method within the <a href="https://developer.android.com/reference/androidx/room/RoomDatabase.Callback.html" target="_blank"><code>RoomDatabase.Callback</code></a>.</p>
+</aside>
+<p>To launch a coroutine we need a <code>CoroutineScope</code>. Update the <code>getDatabase</code> method of the <code>WordRoomDatabase</code> class, to also get a coroutine scope as parameter:</p>
+<pre><code><span class="pln">fun getDatabase</span><span class="pun">(</span><span class="pln">
+       context</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Context</span><span class="pun">,</span><span class="pln">
+       scope</span><span class="pun">:</span><span class="pln"> </span><span class="typ">CoroutineScope</span><span class="pln">
+  </span><span class="pun">):</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+</span><span class="pun">...</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Update the database retrieval initializer in the <code>init</code> block of <code>WordViewModel</code> to also pass the scope.</p>
+<pre><code><span class="pln">val wordsDao </span><span class="pun">=</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pun">.</span><span class="pln">getDatabase</span><span class="pun">(</span><span class="pln">application</span><span class="pun">,</span><span class="pln"> viewModelScope</span><span class="pun">).</span><span class="pln">wordDao</span><span class="pun">()</span></code></pre>
+<p>In the <code>WordRoomDatabase</code>, we create a custom implementation of the <code>RoomDatabase.Callback()</code>, that also gets a <code>CoroutineScope</code> as constructor parameter. Then, we override the <code>onOpen</code> method to populate the database. </p>
+<p>Here is the code for creating the callback <strong>within</strong> the <code>WordRoomDatabase</code> class:</p>
+<pre><code><span class="kwd">private</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordDatabaseCallback</span><span class="pun">(</span><span class="pln">
+    </span><span class="kwd">private</span><span class="pln"> val scope</span><span class="pun">:</span><span class="pln"> </span><span class="typ">CoroutineScope</span><span class="pln">
+</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">RoomDatabase</span><span class="pun">.</span><span class="typ">Callback</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+    </span><span class="kwd">override</span><span class="pln"> fun onOpen</span><span class="pun">(</span><span class="pln">db</span><span class="pun">:</span><span class="pln"> </span><span class="typ">SupportSQLiteDatabase</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onOpen</span><span class="pun">(</span><span class="pln">db</span><span class="pun">)</span><span class="pln">
+        INSTANCE</span><span class="pun">?.</span><span class="kwd">let</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> database </span><span class="pun">-&gt;</span><span class="pln">
+            scope</span><span class="pun">.</span><span class="pln">launch </span><span class="pun">{</span><span class="pln">
+                populateDatabase</span><span class="pun">(</span><span class="pln">database</span><span class="pun">.</span><span class="pln">wordDao</span><span class="pun">())</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    suspend fun populateDatabase</span><span class="pun">(</span><span class="pln">wordDao</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordDao</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Delete all content here.</span><span class="pln">
+        wordDao</span><span class="pun">.</span><span class="pln">deleteAll</span><span class="pun">()</span><span class="pln">
+
+        </span><span class="com">// Add sample words.</span><span class="pln">
+        </span><span class="kwd">var</span><span class="pln"> word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="str">"Hello"</span><span class="pun">)</span><span class="pln">
+        wordDao</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+        word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="str">"World!"</span><span class="pun">)</span><span class="pln">
+        wordDao</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+
+        </span><span class="com">// TODO: Add your own words!</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Finally, add the callback to the database build sequence right before calling <code>.build()</code> on the <code>Room.databaseBuilder()</code>.</p>
+<pre><code><span class="pun">.</span><span class="pln">addCallback</span><span class="pun">(</span><span class="typ">WordDatabaseCallback</span><span class="pun">(</span><span class="pln">scope</span><span class="pun">))</span></code></pre>
+<p>Here is what the final code should look like:</p>
+<pre><code><span class="lit">@Database</span><span class="pun">(</span><span class="pln">entities </span><span class="pun">=</span><span class="pln"> arrayOf</span><span class="pun">(</span><span class="typ">Word</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">),</span><span class="pln"> version </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span><span class="pln"> exportSchema </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">)</span><span class="pln">
+</span><span class="kwd">abstract</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">RoomDatabase</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+   </span><span class="kwd">abstract</span><span class="pln"> fun wordDao</span><span class="pun">():</span><span class="pln"> </span><span class="typ">WordDao</span><span class="pln">
+
+   </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">class</span><span class="pln"> </span><span class="typ">WordDatabaseCallback</span><span class="pun">(</span><span class="pln">
+       </span><span class="kwd">private</span><span class="pln"> val scope</span><span class="pun">:</span><span class="pln"> </span><span class="typ">CoroutineScope</span><span class="pln">
+   </span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">RoomDatabase</span><span class="pun">.</span><span class="typ">Callback</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+       </span><span class="kwd">override</span><span class="pln"> fun onOpen</span><span class="pun">(</span><span class="pln">db</span><span class="pun">:</span><span class="pln"> </span><span class="typ">SupportSQLiteDatabase</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+           </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onOpen</span><span class="pun">(</span><span class="pln">db</span><span class="pun">)</span><span class="pln">
+           INSTANCE</span><span class="pun">?.</span><span class="kwd">let</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> database </span><span class="pun">-&gt;</span><span class="pln">
+               scope</span><span class="pun">.</span><span class="pln">launch </span><span class="pun">{</span><span class="pln">
+                   </span><span class="kwd">var</span><span class="pln"> wordDao </span><span class="pun">=</span><span class="pln"> database</span><span class="pun">.</span><span class="pln">wordDao</span><span class="pun">()</span><span class="pln">
+
+                   </span><span class="com">// Delete all content here.</span><span class="pln">
+                   wordDao</span><span class="pun">.</span><span class="pln">deleteAll</span><span class="pun">()</span><span class="pln">
+
+                   </span><span class="com">// Add sample words.</span><span class="pln">
+                   </span><span class="kwd">var</span><span class="pln"> word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="str">"Hello"</span><span class="pun">)</span><span class="pln">
+                   wordDao</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+                   word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="str">"World!"</span><span class="pun">)</span><span class="pln">
+                   wordDao</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+
+                   </span><span class="com">// TODO: Add your own words!</span><span class="pln">
+                   word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="str">"TODO!"</span><span class="pun">)</span><span class="pln">
+                   wordDao</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+               </span><span class="pun">}</span><span class="pln">
+           </span><span class="pun">}</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+
+   companion </span><span class="kwd">object</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+       </span><span class="lit">@Volatile</span><span class="pln">
+       </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">var</span><span class="pln"> INSTANCE</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pun">?</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pln">
+
+       fun getDatabase</span><span class="pun">(</span><span class="pln">
+           context</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Context</span><span class="pun">,</span><span class="pln">
+           scope</span><span class="pun">:</span><span class="pln"> </span><span class="typ">CoroutineScope</span><span class="pln">
+       </span><span class="pun">):</span><span class="pln"> </span><span class="typ">WordRoomDatabase</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="com">// if the INSTANCE is not null, then return it,</span><span class="pln">
+            </span><span class="com">// if it is, then create the database</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> INSTANCE </span><span class="pun">?:</span><span class="pln"> </span><span class="kwd">synchronized</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                val instance </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Room</span><span class="pun">.</span><span class="pln">databaseBuilder</span><span class="pun">(</span><span class="pln">
+                        context</span><span class="pun">.</span><span class="pln">applicationContext</span><span class="pun">,</span><span class="pln">
+                        </span><span class="typ">WordRoomDatabase</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">.</span><span class="pln">java</span><span class="pun">,</span><span class="pln">
+                        </span><span class="str">"word_database"</span><span class="pln">
+                </span><span class="pun">)</span><span class="pln">
+                 </span><span class="pun">.</span><span class="pln">addCallback</span><span class="pun">(</span><span class="typ">WordDatabaseCallback</span><span class="pun">(</span><span class="pln">scope</span><span class="pun">))</span><span class="pln">
+                 </span><span class="pun">.</span><span class="pln">build</span><span class="pun">()</span><span class="pln">
+                INSTANCE </span><span class="pun">=</span><span class="pln"> instance
+                </span><span class="com">// return instance</span><span class="pln">
+                instance
+        </span><span class="pun">}</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Add NewWordActivity" duration="5" step="13" style="transform: translate3d(-110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">13. Add NewWordActivity</h2>
+        <p>Add these string resources in <code>values/strings.xml</code>:</p>
+<pre><code><span class="tag">&lt;string</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"hint_word"</span><span class="tag">&gt;</span><span class="pln">Word...</span><span class="tag">&lt;/string&gt;</span><span class="pln">
+</span><span class="tag">&lt;string</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"button_save"</span><span class="tag">&gt;</span><span class="pln">Save</span><span class="tag">&lt;/string&gt;</span><span class="pln">
+</span><span class="tag">&lt;string</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"empty_not_saved"</span><span class="tag">&gt;</span><span class="pln">Word not saved because it is empty.</span><span class="tag">&lt;/string&gt;</span></code></pre>
+<p>Add this color resource in <code>value/colors.xml</code>:</p>
+<pre><code><span class="tag">&lt;color</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"buttonLabel"</span><span class="tag">&gt;</span><span class="pln">#d3d3d3</span><span class="tag">&lt;/color&gt;</span></code></pre>
+<p>Create a new dimension resource file:</p>
+<ol type="1" start="1">
+<li>Click the app module in the <strong>Project</strong> window.</li>
+<li>Select  <strong>File &gt; New &gt; Android Resource File</strong></li>
+<li>From the Available Qualifiers, select <strong>Dimension </strong></li>
+<li>Set the file name: dimens</li>
+</ol>
+<p class="image-container"><img style="width: 624.00px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/aa5895240838057.png"></p>
+<p>Add these dimension resources in <code>values/dimens.xml</code>:</p>
+<pre><code><span class="tag">&lt;dimen</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"small_padding"</span><span class="tag">&gt;</span><span class="pln">6dp</span><span class="tag">&lt;/dimen&gt;</span><span class="pln">
+</span><span class="tag">&lt;dimen</span><span class="pln"> </span><span class="atn">name</span><span class="pun">=</span><span class="atv">"big_padding"</span><span class="tag">&gt;</span><span class="pln">16dp</span><span class="tag">&lt;/dimen&gt;</span></code></pre>
+<p>Create a new empty Android <code>Activity</code> with the Empty Activity template:</p>
+<ol type="1" start="1">
+<li>Select  <strong>File &gt; New &gt; Activity &gt; Empty Activity</strong></li>
+<li>Enter <code>NewWordActivity</code> for the Activity name.</li>
+<li>Verify that the new activity has been added to the Android Manifest!</li>
+</ol>
+<pre><code><span class="tag">&lt;activity</span><span class="pln"> </span><span class="atn">android:name</span><span class="pun">=</span><span class="atv">".NewWordActivity"</span><span class="tag">&gt;&lt;/activity&gt;</span></code></pre>
+<p>Update the <code>activity_new_word.xml</code> file in the layout folder with the following code:</p>
+<pre><code><span class="pun">&lt;?</span><span class="pln">xml version</span><span class="pun">=</span><span class="str">"1.0"</span><span class="pln"> encoding</span><span class="pun">=</span><span class="str">"utf-8"</span><span class="pun">?&gt;</span><span class="pln">
+
+</span><span class="tag">&lt;LinearLayout</span><span class="pln"> </span><span class="atn">xmlns:android</span><span class="pun">=</span><span class="atv">"http://schemas.android.com/apk/res/android"</span><span class="pln">
+   </span><span class="atn">android:orientation</span><span class="pun">=</span><span class="atv">"vertical"</span><span class="pln"> </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="pln">
+   </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="tag">&gt;</span><span class="pln">
+
+   </span><span class="tag">&lt;EditText</span><span class="pln">
+       </span><span class="atn">android:id</span><span class="pun">=</span><span class="atv">"@+id/edit_word"</span><span class="pln">
+       </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="pln">
+       </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+       </span><span class="atn">android:fontFamily</span><span class="pun">=</span><span class="atv">"sans-serif-light"</span><span class="pln">
+       </span><span class="atn">android:hint</span><span class="pun">=</span><span class="atv">"@string/hint_word"</span><span class="pln">
+       </span><span class="atn">android:inputType</span><span class="pun">=</span><span class="atv">"textAutoComplete"</span><span class="pln">
+       </span><span class="atn">android:padding</span><span class="pun">=</span><span class="atv">"@dimen/small_padding"</span><span class="pln">
+       </span><span class="atn">android:layout_marginBottom</span><span class="pun">=</span><span class="atv">"@dimen/big_padding"</span><span class="pln">
+       </span><span class="atn">android:layout_marginTop</span><span class="pun">=</span><span class="atv">"@dimen/big_padding"</span><span class="pln">
+       </span><span class="atn">android:textSize</span><span class="pun">=</span><span class="atv">"18sp"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+
+   </span><span class="tag">&lt;Button</span><span class="pln">
+       </span><span class="atn">android:id</span><span class="pun">=</span><span class="atv">"@+id/button_save"</span><span class="pln">
+       </span><span class="atn">android:layout_width</span><span class="pun">=</span><span class="atv">"match_parent"</span><span class="pln">
+       </span><span class="atn">android:layout_height</span><span class="pun">=</span><span class="atv">"wrap_content"</span><span class="pln">
+       </span><span class="atn">android:background</span><span class="pun">=</span><span class="atv">"@color/colorPrimary"</span><span class="pln">
+       </span><span class="atn">android:text</span><span class="pun">=</span><span class="atv">"@string/button_save"</span><span class="pln">
+       </span><span class="atn">android:textColor</span><span class="pun">=</span><span class="atv">"@color/buttonLabel"</span><span class="pln"> </span><span class="tag">/&gt;</span><span class="pln">
+
+</span><span class="tag">&lt;/LinearLayout&gt;</span></code></pre>
+<p>Update the code for the activity:</p>
+<pre><code><span class="kwd">class</span><span class="pln"> </span><span class="typ">NewWordActivity</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">AppCompatActivity</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+    </span><span class="kwd">private</span><span class="pln"> lateinit </span><span class="kwd">var</span><span class="pln"> editWordView</span><span class="pun">:</span><span class="pln"> </span><span class="typ">EditText</span><span class="pln">
+
+    </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">override</span><span class="pln"> fun onCreate</span><span class="pun">(</span><span class="pln">savedInstanceState</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Bundle</span><span class="pun">?)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onCreate</span><span class="pun">(</span><span class="pln">savedInstanceState</span><span class="pun">)</span><span class="pln">
+        setContentView</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">layout</span><span class="pun">.</span><span class="pln">activity_new_word</span><span class="pun">)</span><span class="pln">
+        editWordView </span><span class="pun">=</span><span class="pln"> findViewById</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">edit_word</span><span class="pun">)</span><span class="pln">
+
+        val button </span><span class="pun">=</span><span class="pln"> findViewById</span><span class="pun">&lt;</span><span class="typ">Button</span><span class="pun">&gt;(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">button_save</span><span class="pun">)</span><span class="pln">
+        button</span><span class="pun">.</span><span class="pln">setOnClickListener </span><span class="pun">{</span><span class="pln">
+            val replyIntent </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Intent</span><span class="pun">()</span><span class="pln">
+            </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="typ">TextUtils</span><span class="pun">.</span><span class="pln">isEmpty</span><span class="pun">(</span><span class="pln">editWordView</span><span class="pun">.</span><span class="pln">text</span><span class="pun">))</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                setResult</span><span class="pun">(</span><span class="typ">Activity</span><span class="pun">.</span><span class="pln">RESULT_CANCELED</span><span class="pun">,</span><span class="pln"> replyIntent</span><span class="pun">)</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                val word </span><span class="pun">=</span><span class="pln"> editWordView</span><span class="pun">.</span><span class="pln">text</span><span class="pun">.</span><span class="pln">toString</span><span class="pun">()</span><span class="pln">
+                replyIntent</span><span class="pun">.</span><span class="pln">putExtra</span><span class="pun">(</span><span class="pln">EXTRA_REPLY</span><span class="pun">,</span><span class="pln"> word</span><span class="pun">)</span><span class="pln">
+                setResult</span><span class="pun">(</span><span class="typ">Activity</span><span class="pun">.</span><span class="pln">RESULT_OK</span><span class="pun">,</span><span class="pln"> replyIntent</span><span class="pun">)</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln">
+            finish</span><span class="pun">()</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    companion </span><span class="kwd">object</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">const</span><span class="pln"> val EXTRA_REPLY </span><span class="pun">=</span><span class="pln"> </span><span class="str">"com.example.android.wordlistsql.REPLY"</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Connect with the data" duration="7" step="14" style="transform: translate3d(110%, 0px, 0px);"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">14. Connect with the data</h2>
+        <p>The final step is to connect the UI to the database by saving
+ new words the user enters and displaying the current contents of the 
+word database in the <code>RecyclerView</code>.</p>
+<p>To display the current contents of the database, add an observer that observes the <code>LiveData</code> in the <code>ViewModel</code>. </p>
+<p>Whenever the data changes, the <code>onChanged()</code> callback is invoked, which calls the adapter's <code>setWord()</code> method to update the adapter's cached data and refresh the displayed list.</p>
+<p>In <code>MainActivity</code>, create a member variable for the <code>ViewModel</code>:</p>
+<pre><code><span class="kwd">private</span><span class="pln"> lateinit </span><span class="kwd">var</span><span class="pln"> wordViewModel</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordViewModel</span></code></pre>
+<p>Use <a href="https://developer.android.com/reference/android/arch/lifecycle/ViewModelProviders.html" target="_blank"><code>ViewModelProviders</code></a> to associate your <code>ViewModel</code> with your <code>Activity</code>. </p>
+<p>When your <code>Activity</code> first starts, the <code>ViewModelProviders</code> will create the <code>ViewModel</code>. When the activity is destroyed, for example through a configuration change, the <code>ViewModel</code> persists. When the activity is re-created, the <code>ViewModelProviders</code> return the existing <code>ViewModel</code>. For more information, see <a href="https://developer.android.com/topic/libraries/architecture/viewmodel.html" target="_blank"><code>ViewModel</code></a>.</p>
+<p>In <code>onCreate()</code> below the <code>RecyclerView</code> code block, get a <code>ViewModel</code> from the <code>ViewModelProvider</code>.</p>
+<pre><code><span class="pln">wordViewModel </span><span class="pun">=</span><span class="pln"> </span><span class="typ">ViewModelProvider</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">).</span><span class="kwd">get</span><span class="pun">(</span><span class="typ">WordViewModel</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">.</span><span class="pln">java</span><span class="pun">)</span></code></pre>
+<p>Also in <code>onCreate()</code>, add an observer for the allWords <code>LiveData</code> property from the Word<code>ViewModel</code>.<br></p>
+<p>The <code>onChanged()</code> method (the default method for our Lambda) fires when the observed data changes and the activity is in the foreground.</p>
+<pre><code><span class="pln">wordViewModel</span><span class="pun">.</span><span class="pln">allWords</span><span class="pun">.</span><span class="pln">observe</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Observer</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> words </span><span class="pun">-&gt;</span><span class="pln">
+            </span><span class="com">// Update the cached copy of the words in the adapter.</span><span class="pln">
+            words</span><span class="pun">?.</span><span class="kwd">let</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> adapter</span><span class="pun">.</span><span class="pln">setWords</span><span class="pun">(</span><span class="pln">it</span><span class="pun">)</span><span class="pln"> </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">})</span></code></pre>
+<p>We want to open the <code>NewWordActivity</code> when tapping on the FAB and, once we are back in the <code>MainActivity</code>, to either insert the new word in the database or show a <code>Toast</code>. To achieve this, let's start by defining a request code:</p>
+<pre><code><span class="kwd">private</span><span class="pln"> val newWordActivityRequestCode </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span></code></pre>
+<p>In <code>MainActivity</code>, add the <code>onActivityResult()</code> code for the <code>NewWordActivity</code>.</p>
+<p>If the activity returns with <code>RESULT_OK</code>, insert the returned word into the database by calling the <code>insert()</code> method of the <code>WordViewModel</code>.</p>
+<pre><code><span class="kwd">override</span><span class="pln"> fun onActivityResult</span><span class="pun">(</span><span class="pln">requestCode</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Int</span><span class="pun">,</span><span class="pln"> resultCode</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Int</span><span class="pun">,</span><span class="pln"> data</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Intent</span><span class="pun">?)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onActivityResult</span><span class="pun">(</span><span class="pln">requestCode</span><span class="pun">,</span><span class="pln"> resultCode</span><span class="pun">,</span><span class="pln"> data</span><span class="pun">)</span><span class="pln">
+
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">requestCode </span><span class="pun">==</span><span class="pln"> newWordActivityRequestCode </span><span class="pun">&amp;&amp;</span><span class="pln"> resultCode </span><span class="pun">==</span><span class="pln"> </span><span class="typ">Activity</span><span class="pun">.</span><span class="pln">RESULT_OK</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        data</span><span class="pun">?.</span><span class="pln">getStringExtra</span><span class="pun">(</span><span class="typ">NewWordActivity</span><span class="pun">.</span><span class="pln">EXTRA_REPLY</span><span class="pun">)?.</span><span class="kwd">let</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            val word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="pln">it</span><span class="pun">)</span><span class="pln">
+            wordViewModel</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="typ">Toast</span><span class="pun">.</span><span class="pln">makeText</span><span class="pun">(</span><span class="pln">
+            applicationContext</span><span class="pun">,</span><span class="pln">
+            R</span><span class="pun">.</span><span class="kwd">string</span><span class="pun">.</span><span class="pln">empty_not_saved</span><span class="pun">,</span><span class="pln">
+            </span><span class="typ">Toast</span><span class="pun">.</span><span class="pln">LENGTH_LONG</span><span class="pun">).</span><span class="pln">show</span><span class="pun">()</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>In <code>MainActivity,</code>start <code>NewWordActivity</code> when the user taps the FAB. In the <code>MainActivity</code> <code>onCreate</code>, find the FAB and add an <code>onClickListener</code> with this code:</p>
+<pre><code><span class="pln">val fab </span><span class="pun">=</span><span class="pln"> findViewById</span><span class="pun">&lt;</span><span class="typ">FloatingActionButton</span><span class="pun">&gt;(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">fab</span><span class="pun">)</span><span class="pln">
+fab</span><span class="pun">.</span><span class="pln">setOnClickListener </span><span class="pun">{</span><span class="pln">
+  val intent </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Intent</span><span class="pun">(</span><span class="kwd">this</span><span class="lit">@MainActivity</span><span class="pun">,</span><span class="pln"> </span><span class="typ">NewWordActivity</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">.</span><span class="pln">java</span><span class="pun">)</span><span class="pln">
+  startActivityForResult</span><span class="pun">(</span><span class="pln">intent</span><span class="pun">,</span><span class="pln"> newWordActivityRequestCode</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>Your finished code should look like this:</p>
+<pre><code><span class="kwd">class</span><span class="pln"> </span><span class="typ">MainActivity</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> </span><span class="typ">AppCompatActivity</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+
+   </span><span class="kwd">private</span><span class="pln"> </span><span class="kwd">const</span><span class="pln"> val newWordActivityRequestCode </span><span class="pun">=</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+   </span><span class="kwd">private</span><span class="pln"> lateinit </span><span class="kwd">var</span><span class="pln"> wordViewModel</span><span class="pun">:</span><span class="pln"> </span><span class="typ">WordViewModel</span><span class="pln">
+
+   </span><span class="kwd">override</span><span class="pln"> fun onCreate</span><span class="pun">(</span><span class="pln">savedInstanceState</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Bundle</span><span class="pun">?)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+       </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onCreate</span><span class="pun">(</span><span class="pln">savedInstanceState</span><span class="pun">)</span><span class="pln">
+       setContentView</span><span class="pun">(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">layout</span><span class="pun">.</span><span class="pln">activity_main</span><span class="pun">)</span><span class="pln">
+       setSupportActionBar</span><span class="pun">(</span><span class="pln">toolbar</span><span class="pun">)</span><span class="pln">
+
+       val recyclerView </span><span class="pun">=</span><span class="pln"> findViewById</span><span class="pun">&lt;</span><span class="typ">RecyclerView</span><span class="pun">&gt;(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">recyclerview</span><span class="pun">)</span><span class="pln">
+       val adapter </span><span class="pun">=</span><span class="pln"> </span><span class="typ">WordListAdapter</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">)</span><span class="pln">
+       recyclerView</span><span class="pun">.</span><span class="pln">adapter </span><span class="pun">=</span><span class="pln"> adapter
+       recyclerView</span><span class="pun">.</span><span class="pln">layoutManager </span><span class="pun">=</span><span class="pln"> </span><span class="typ">LinearLayoutManager</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">)</span><span class="pln">
+
+       wordViewModel </span><span class="pun">=</span><span class="pln"> </span><span class="typ">ViewModelProvider</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">).</span><span class="kwd">get</span><span class="pun">(</span><span class="typ">WordViewModel</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">.</span><span class="pln">java</span><span class="pun">)</span><span class="pln">
+       wordViewModel</span><span class="pun">.</span><span class="pln">allWords</span><span class="pun">.</span><span class="pln">observe</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">,</span><span class="pln"> </span><span class="typ">Observer</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> words </span><span class="pun">-&gt;</span><span class="pln">
+           </span><span class="com">// Update the cached copy of the words in the adapter.</span><span class="pln">
+           words</span><span class="pun">?.</span><span class="kwd">let</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> adapter</span><span class="pun">.</span><span class="pln">setWords</span><span class="pun">(</span><span class="pln">it</span><span class="pun">)</span><span class="pln"> </span><span class="pun">}</span><span class="pln">
+       </span><span class="pun">})</span><span class="pln">
+
+       val fab </span><span class="pun">=</span><span class="pln"> findViewById</span><span class="pun">&lt;</span><span class="typ">FloatingActionButton</span><span class="pun">&gt;(</span><span class="pln">R</span><span class="pun">.</span><span class="pln">id</span><span class="pun">.</span><span class="pln">fab</span><span class="pun">)</span><span class="pln">
+       fab</span><span class="pun">.</span><span class="pln">setOnClickListener </span><span class="pun">{</span><span class="pln">
+           val intent </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Intent</span><span class="pun">(</span><span class="kwd">this</span><span class="lit">@MainActivity</span><span class="pun">,</span><span class="pln"> </span><span class="typ">NewWordActivity</span><span class="pun">::</span><span class="kwd">class</span><span class="pun">.</span><span class="pln">java</span><span class="pun">)</span><span class="pln">
+           startActivityForResult</span><span class="pun">(</span><span class="pln">intent</span><span class="pun">,</span><span class="pln"> newWordActivityRequestCode</span><span class="pun">)</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+
+   </span><span class="kwd">override</span><span class="pln"> fun onActivityResult</span><span class="pun">(</span><span class="pln">requestCode</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Int</span><span class="pun">,</span><span class="pln"> resultCode</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Int</span><span class="pun">,</span><span class="pln"> data</span><span class="pun">:</span><span class="pln"> </span><span class="typ">Intent</span><span class="pun">?)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+       </span><span class="kwd">super</span><span class="pun">.</span><span class="pln">onActivityResult</span><span class="pun">(</span><span class="pln">requestCode</span><span class="pun">,</span><span class="pln"> resultCode</span><span class="pun">,</span><span class="pln"> data</span><span class="pun">)</span><span class="pln">
+
+       </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">requestCode </span><span class="pun">==</span><span class="pln"> newWordActivityRequestCode </span><span class="pun">&amp;&amp;</span><span class="pln"> resultCode </span><span class="pun">==</span><span class="pln"> </span><span class="typ">Activity</span><span class="pun">.</span><span class="pln">RESULT_OK</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+           data</span><span class="pun">?.</span><span class="pln">getStringExtra</span><span class="pun">(</span><span class="typ">NewWordActivity</span><span class="pun">.</span><span class="pln">EXTRA_REPLY</span><span class="pun">)?.</span><span class="kwd">let</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+               val word </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Word</span><span class="pun">(</span><span class="pln">it</span><span class="pun">)</span><span class="pln">
+               wordViewModel</span><span class="pun">.</span><span class="pln">insert</span><span class="pun">(</span><span class="pln">word</span><span class="pun">)</span><span class="pln">
+           </span><span class="pun">}</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+           </span><span class="typ">Toast</span><span class="pun">.</span><span class="pln">makeText</span><span class="pun">(</span><span class="pln">
+               applicationContext</span><span class="pun">,</span><span class="pln">
+               R</span><span class="pun">.</span><span class="kwd">string</span><span class="pun">.</span><span class="pln">empty_not_saved</span><span class="pun">,</span><span class="pln">
+               </span><span class="typ">Toast</span><span class="pun">.</span><span class="pln">LENGTH_LONG</span><span class="pun">).</span><span class="pln">show</span><span class="pun">()</span><span class="pln">
+       </span><span class="pun">}</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+<p>RUN YOUR APP!!! </p>
+<p>When you add a word to the database in <code>NewWordActivity</code>, the UI will automatically update.</p>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Summary" duration="1" step="15" style="transform: translate3d(0px, 0px, 0px);" selected=""><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">15. Summary</h2>
+        <p>Now that you have  a working app, let's recap what you've built. Here is the app structure again:</p>
+<p class="image-container"><img style="width: 558.50px" src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/1205d9f95688b35b.png"></p>
+<p>The components of the app are:</p>
+<ul>
+<li><code>MainActivity</code>: displays words in a list using a  <code>RecyclerView</code> and the  <code>WordListAdapter</code>. In <code>MainActivity</code>, there is an <code>Observer</code> that observes the words LiveData from the database and is notified when they change.</li>
+<li><code>NewWordActivity:</code> adds a new word to the list.</li>
+<li><code>WordViewModel</code>: provides methods for accessing the data 
+layer, and it returns LiveData so that MainActivity can set up the 
+observer relationship.*</li>
+<li><code>LiveData&lt;List&lt;Word&gt;&gt;</code>: Makes possible the automatic updates in the UI components.  In the <code>MainActivity</code>, there is an <code>Observer</code> that observes the words LiveData from the database and is notified when they change.</li>
+<li><code>Repository:</code> manages one or more data sources. The <code>Repository</code> exposes methods for the ViewModel to interact with the underlying data provider. In this app, that backend is a Room database. </li>
+<li><code>Room</code>: is a wrapper around and implements a SQLite database. Room does a lot of work for you that you used to have to do yourself. </li>
+<li>DAO: maps method calls to database queries, so that when the Repository calls a method such as <code>getAlphabetizedWords()</code>, Room can execute <strong><code>SELECT * from word_table ORDER BY word ASC</code></strong><strong>.</strong></li>
+<li><code>Word</code>: is the  entity class that contains a single word.</li>
+</ul>
+<p>* <code>Views</code> and <code>Activities</code> (and <code>Fragments</code>) only interact with the data through the <code>ViewModel</code>. As such, it doesn't matter where the data comes from. </p>
+<h2 is-upgraded=""><strong>Flow of Data for Automatic UI Updates (Reactive UI)</strong></h2>
+<p>The automatic update is possible because we are using LiveData. In the <code>MainActivity</code>, there is an <code>Observer</code> that observes the words LiveData from the database and is notified when they change. When there is a change, the observer's <code>onChange()</code> method is executed and updates <code>mWords</code> in the <code>WordListAdapter</code>.</p>
+<p>The data can be observed because it is <code>LiveData</code>. And what is observed is the <code>LiveData&lt;List&lt;Word&gt;&gt;</code> that is returned by the <code>WordViewModel</code> a<code>llWords</code> property.</p>
+<p>The <code>WordViewModel</code> hides everything about the backend from the UI layer. It provides methods for accessing the data layer, and it returns <code>LiveData</code> so that <code>MainActivity</code> can set up the observer relationship. <code>Views</code> and <code>Activities</code> (and <code>Fragments</code>) only interact with the data through the <code>ViewModel</code>. As such, it doesn't matter where the data comes from. </p>
+<p>In this case, the data comes from a <code>Repository</code>. The <code>ViewModel</code> does not need to know what that Repository interacts with. It just needs to know how to interact with the <code>Repository</code>, which is through the methods exposed by the <code>Repository</code>. </p>
+<p>The Repository manages one or more data sources. In the <code>WordListSample</code>
+ app, that backend is a Room database. Room is a wrapper around and 
+implements a SQLite database. Room does a lot of work for you that you 
+used to have to do yourself. For example, Room does everything that you 
+used to do with an <code>SQLiteOpenHelper</code> class.</p>
+<p>The DAO maps method calls to database queries, so that when the Repository calls a method such as <code>getAllWords()</code>, Room can execute <strong><code>SELECT * from word_table ORDER BY word ASC</code></strong><strong>.</strong></p>
+<p>Because the result returned from the query is observed <code>LiveData</code>, every time the data in Room changes, the <code>Observer</code> interface's <code>onChanged()</code> method is executed and the UI updated. </p>
+
+
+      </div></div></google-codelab-step><google-codelab-step label="Further explorations" duration="1" step="16"><div class="instructions"><div class="inner"><h2 is-upgraded="" class="step-title">16. Further explorations</h2>
+        <aside class="special"><p>The <a href="https://github.com/googlecodelabs/android-room-with-a-view/tree/kotlin" target="_blank">solution code</a>
+ includes unit tests for the Room database. Testing is beyond the scope 
+of this codelab. Take a look at the code if you are interested. </p>
+</aside>
+<aside class="special"><p>If you need to migrate an app, see <a href="https://medium.com/google-developers/7-steps-to-room-27a5fe5f99b2" target="_blank">7 Steps to Room</a><strong> </strong>after you successfully complete this codelab. Note that it is incredibly satisfying to delete your <a href="https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper.html" target="_blank"><code>SQLiteOpenHelper</code></a> class and a whole lot of other code. </p>
+</aside>
+<aside class="special"><p>When you have lots of data, consider using the <a href="https://developer.android.com/topic/libraries/architecture/paging.html" target="_blank">paging library</a>. The paging codelab is <a href="https://codelabs.developers.google.com/codelabs/android-paging/" target="_blank">here</a>.</p>
+</aside>
+<aside class="special"><p><strong>More on Architecture, Room, LiveData and ViewModel</strong></p>
+<ul>
+<li><a href="https://developer.android.com/topic/libraries/architecture/guide.html" target="_blank">Guide to App Architecture</a></li>
+<li><a href="https://www.youtube.com/watch?v=vOJCrbr144o" target="_blank">Android Architecture</a> overview (video)</li>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-persistence/#0" target="_blank">Android Persistence codelab</a> (<code>LiveData</code>, Room, DAO)</li>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-lifecycles/#0" target="_blank">Android lifecycle-aware components codelab</a> (<code>ViewModel</code>, <code>LiveData</code>, <code>LifecycleOwner</code>, <code>LifecycleRegistryOwner</code>)</li>
+<li><a href="https://github.com/googlesamples/android-architecture-components" target="_blank">Architecture Component code samples</a></li>
+<li><a href="https://classroom.udacity.com/courses/ud9012" target="_blank">Developing Android Apps with Kotlin</a> free online training - includes lessons on ViewModel, LiveData, Room, the repository class and more with code examples.</li>
+</ul>
+<p><strong>Other Architecture Component codelabs</strong></p>
+<ul>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-databinding/index.html" target="_blank">Databinding Codelab</a> - Remove even more code from your activities and fragments; works great with ViewModel and LiveData</li>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-paging/#0" target="_blank">Paging Codelab</a> - Page through huge lists of data from Room</li>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-navigation" target="_blank">Navigation Codelab</a> - Handle in app navigation using the Navigation component and tooling</li>
+<li><a href="https://codelabs.developers.google.com/codelabs/android-workmanager" target="_blank">WorkManager Codelab</a> - Efficiently do work when your app is in the background</li>
+</ul>
+</aside>
+<h2 is-upgraded=""><br><strong>[Optional] Download the solution code</strong></h2>
+<p>If you haven't already, you can take a look at the solution code for the codelab. You can look at the <a href="https://github.com/googlecodelabs/android-room-with-a-view/tree/kotlin" target="_blank">github repository</a> or download the code here:</p>
+<p><a href="https://github.com/googlecodelabs/android-room-with-a-view/archive/kotlin.zip" target="_blank"><paper-button class="colored" raised=""><iron-icon icon="file-download"></iron-icon>Download source code</paper-button></a></p>
+<p>Unpack the downloaded zip file. This will unpack a root folder, <code>android-room-with-a-view-kotlin</code>, which contains the complete app. </p>
+
+
+      </div></div></google-codelab-step></div><div id="controls"><div id="fabs"><a href="#" id="previous-step" title="Previous step">Back</a><div class="spacer"></div><a href="#" id="next-step" title="Next step">Next</a><a href="https://codelabs.developers.google.com/" id="done" title="Codelab complete" hidden="">Done</a></div></div></div></google-codelab>
+
+  <script src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/native-shim.js"></script>
+  <script src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/custom-elements.js"></script>
+  <script src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/prettify.js"></script>
+  <script src="Android%20Room%20with%20a%20View%20-%20Kotlin_fichiers/codelab-elements.js"></script>
+
+
+
+</body></html>
