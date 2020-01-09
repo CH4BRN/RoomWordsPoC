@@ -3,10 +3,12 @@
 
 package com.uldskull.roomwordsample.infrastructure.data.word
 
-/**
- *   Class "WordRoomDatabaseMigration" :
- *   TODO: Fill class use.
- **/
-class WordRoomDatabaseMigration {
-// TODO : Fill class.
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+
+val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+
+    }
+
 }

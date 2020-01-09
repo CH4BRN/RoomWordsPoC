@@ -1,14 +1,14 @@
 // File WordRoomDatabase.kt
 // @Author pierre.antoine - 06/01/2020 - No copyright.
 
-package com.uldskull.roomwordsample.infrastructure.data
+package com.uldskull.roomwordsample.infrastructure.data.word
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.uldskull.roomwordsample.domain.Word
+import com.uldskull.roomwordsample.domain.aggregates.Word
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -58,6 +58,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
                             scope
                         )
                     )
+                    .addMigrations(MIGRATION_1_2)
                     .build()
                 INSTANCE = instance
                 return instance

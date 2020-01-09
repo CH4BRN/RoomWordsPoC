@@ -1,4 +1,4 @@
-package com.uldskull.roomwordsample.infrastructure.data
+package com.uldskull.roomwordsample.infrastructure.data.word
 
 import android.provider.BaseColumns
 
@@ -18,14 +18,24 @@ object DatabaseContract {
             /**
              * Table name.
              */
-            const val TABLE_NAME = "word_table"
+            const val WORD_TABLE_NAME = "word_table"
             /**
              * Column name.
              */
             const val COLUMN_WORD = "word"
-
-
         }
+    }
 
+    class SynonymDatabaseEntrie : BaseColumns {
+        companion object {
+            /**
+             * Table name.
+             */
+            const val SYNONYM_TABLE_NAME = "synonym_table"
+            /**
+             * Column name.
+             */
+            const val COLUMN_SYNONYM = "synonym"
+        }
     }
 }
