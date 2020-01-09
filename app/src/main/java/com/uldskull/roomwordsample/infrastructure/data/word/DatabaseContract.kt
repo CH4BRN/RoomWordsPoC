@@ -25,17 +25,4 @@ object DatabaseContract {
             const val COLUMN_WORD = "word"
         }
     }
-
-    class SynonymDatabaseEntrie : BaseColumns {
-        companion object {
-            /**
-             * Table name.
-             */
-            const val SYNONYM_TABLE_NAME = "synonym_table"
-            /**
-             * Column name.
-             */
-            const val COLUMN_SYNONYM = "synonym"
-        }
-    }
 }
