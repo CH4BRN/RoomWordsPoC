@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uldskull.roomwordsample.R
-import com.uldskull.roomwordsample.domain.Word
+import com.uldskull.roomwordsample.domain.aggregates.Synonym
+import com.uldskull.roomwordsample.domain.aggregates.Word
+import com.uldskull.roomwordsample.infrastructure.data.word.DatabaseContract
 import com.uldskull.roomwordsample.ui.fragments.CustomListFragment
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
 
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity(), CustomListFragment.OnFragmentInteracti
             startActivityForResult(intent, newWordActivityRequestCode)
         }
         */
+
+        applicationContext.deleteDatabase(DatabaseContract.WordDatabaseEntries.DATABASE_NAME)
     }
 
     private fun initFab():FloatingActionButton{
@@ -89,8 +93,15 @@ class MainActivity : AppCompatActivity(), CustomListFragment.OnFragmentInteracti
 
         if(requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK){
 
-            data?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let {
-                val word = Word(null, it)
+            var synonym:String =""
+
+            data?.getStringExtra(NewWordActivity.SYNONYM_REPLY)?.let{
+                synonym = it
+            }
+
+            data?.getStringExtra(NewWordActivity.WORD_REPLY)?.let {
+                val word =
+                    Word(null, it, Synonym(synonym))
                 wordViewModel.insert(word)
             }
 

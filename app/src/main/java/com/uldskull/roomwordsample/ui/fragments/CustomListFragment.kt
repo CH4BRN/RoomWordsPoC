@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uldskull.roomwordsample.R
-import com.uldskull.roomwordsample.domain.Word
+import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
 import com.uldskull.roomwordsample.ui.activities.MainActivity
 import com.uldskull.roomwordsample.ui.adapter.WordListAdapter
@@ -116,10 +116,12 @@ class CustomListFragment : Fragment() {
                             activity, arraySort[position].word,
                             Toast.LENGTH_SHORT
                         ).show()
-                        val word = Word(
-                            arraySort[position].id,
-                            arraySort[position].word
-                        )
+                        val word =
+                            Word(
+                                arraySort[position].id,
+                                arraySort[position].word,
+                                arraySort[position].synonym
+                            )
 
 
                         //TODO : change fragment

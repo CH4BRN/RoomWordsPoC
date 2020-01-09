@@ -7,9 +7,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.uldskull.roomwordsample.domain.Word
-import com.uldskull.roomwordsample.infrastructure.data.WordRepository
-import com.uldskull.roomwordsample.infrastructure.data.WordRoomDatabase
+import com.uldskull.roomwordsample.domain.aggregates.Word
+import com.uldskull.roomwordsample.infrastructure.data.word.WordRepository
+import com.uldskull.roomwordsample.infrastructure.data.word.WordRoomDatabase
 import kotlinx.coroutines.launch
 
 /**
