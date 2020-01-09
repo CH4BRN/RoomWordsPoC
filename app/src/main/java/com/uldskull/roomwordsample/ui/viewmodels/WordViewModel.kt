@@ -1,7 +1,7 @@
 // File WordViewModel.kt
 // @Author pierre.antoine - 06/01/2020 - No copyright.
 
-package com.uldskull.roomwordsample.ui
+package com.uldskull.roomwordsample.ui.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
  *   Class extends AndroidViewModel and requires application as a parameter.
  *   If you need the application context (which has a lifecycle that lives as
  *   long as the application does), use AndroidViewModel, as shown in this codelab.
- *   TODO: Fill class use.
+ *
  **/
 class WordViewModel(application: Application) :AndroidViewModel(application) {
     // The ViewModel maintains a reference to the repository to get data.
@@ -30,7 +30,7 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository
         //   also pass the scope.
-        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).WordDao()
+        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
         repository =
             WordRepository(
                 wordsDao
@@ -48,5 +48,4 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
     fun insert(word: Word) = viewModelScope.launch {
         repository.insert(word)
     }
-// TODO : Fill class.
 }

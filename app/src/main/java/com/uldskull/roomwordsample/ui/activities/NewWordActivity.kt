@@ -1,4 +1,4 @@
-package com.uldskull.roomwordsample.ui
+package com.uldskull.roomwordsample.ui.activities
 
 import android.app.Activity
 import android.content.Intent

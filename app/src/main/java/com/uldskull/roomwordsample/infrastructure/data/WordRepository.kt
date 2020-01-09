@@ -5,7 +5,6 @@ package com.uldskull.roomwordsample.infrastructure.data
 
 import androidx.lifecycle.LiveData
 import com.uldskull.roomwordsample.domain.Word
-import com.uldskull.roomwordsample.infrastructure.data.WordDao
 
 /**
  *   Class "WordRepository" :

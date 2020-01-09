@@ -12,14 +12,14 @@ import com.uldskull.roomwordsample.domain.Word
 
 /**
  *   Interface "WordDao" :
- *   TODO: Fill interface use.
+ *   Interface used to access database.
  **/
 @Dao
 interface WordDao {
     @Query("SELECT * FROM word_table ORDER BY word ASC")
     fun getAlphabetizedWords(): LiveData<List<Word>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(word: Word)
 
     @Query("DELETE FROM word_table")

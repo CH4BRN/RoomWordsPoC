@@ -2,11 +2,26 @@ package com.uldskull.roomwordsample.infrastructure.data
 
 import android.provider.BaseColumns
 
+/**
+ * Data for database
+ */
 object DatabaseContract {
-    class WordDatabaseEntries : BaseColumns{
-        companion object{
+    /**
+     * Entries for word database
+     */
+    class WordDatabaseEntries : BaseColumns {
+        companion object {
+            /**
+             * Database name.
+             */
             const val DATABASE_NAME = "word_database"
-           const val TABLE_NAME = "word_table"
+            /**
+             * Table name.
+             */
+            const val TABLE_NAME = "word_table"
+            /**
+             * Column name.
+             */
             const val COLUMN_WORD = "word"
 
 

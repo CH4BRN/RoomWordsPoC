@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <!--
+        <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -15,6 +16,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/recyclerview_item" />
+        -->
+
+    <FrameLayout
+        android:id="@+id/recycler_view_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#EEEE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
