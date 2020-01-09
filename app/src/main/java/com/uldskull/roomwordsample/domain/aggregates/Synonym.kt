@@ -3,14 +3,9 @@
 
 package com.uldskull.roomwordsample.domain.aggregates
 
-import androidx.room.*
-import com.uldskull.roomwordsample.infrastructure.data.word.DatabaseContract
-
-
 
 /**
  *   Class "Synonym" :
- *   TODO: Fill class use.
  **/
 
-class Synonym(var value:String)
+class Synonym(var value: String)

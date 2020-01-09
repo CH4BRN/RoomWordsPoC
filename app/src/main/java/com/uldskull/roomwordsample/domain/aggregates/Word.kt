@@ -27,4 +27,5 @@ data class Word(
     @ColumnInfo(name = DatabaseContract.WordDatabaseEntries.COLUMN_WORD)
     val word: String,
     @Embedded
-    val synonym: Synonym)
+    val synonym: Synonym
+)
