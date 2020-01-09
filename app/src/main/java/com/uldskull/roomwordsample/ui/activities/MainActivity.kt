@@ -2,7 +2,6 @@ package com.uldskull.roomwordsample.ui.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,11 +11,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uldskull.roomwordsample.R
 import com.uldskull.roomwordsample.domain.aggregates.Synonym
 import com.uldskull.roomwordsample.domain.aggregates.Word
-import com.uldskull.roomwordsample.infrastructure.data.word.DatabaseContract
 import com.uldskull.roomwordsample.ui.fragments.CustomListFragment
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
 
-class MainActivity : AppCompatActivity(), CustomListFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), CustomListFragment.OnCustomListFragmentInteractionListener {
 
     private val newWordActivityRequestCode = 1
     /**
@@ -33,34 +31,9 @@ class MainActivity : AppCompatActivity(), CustomListFragment.OnFragmentInteracti
 
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
         initRecyclerView()
-        /*
-        val recyclerView = findViewById<RecyclerView>(R.id.recycleview)
-        val adapter =
-            WordListAdapter(this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
-
-        wordViewModel.allWords.observe(this, Observer { words ->
-            //  Update the cached copy . The onChanged() method (the default method for
-            //  our Lambda) fires when the observed data changes and the activity
-            //  is in the foreground.
-            words?.let { adapter.setWords(it) }
-        })
-        */
 
         val fab = initFab()
-        /*
 
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener{
-            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
-            startActivityForResult(intent, newWordActivityRequestCode)
-        }
-        */
-
-        applicationContext.deleteDatabase(DatabaseContract.WordDatabaseEntries.DATABASE_NAME)
     }
 
     private fun initFab():FloatingActionButton{
@@ -93,7 +66,7 @@ class MainActivity : AppCompatActivity(), CustomListFragment.OnFragmentInteracti
 
         if(requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK){
 
-            var synonym:String =""
+            var synonym =""
 
             data?.getStringExtra(NewWordActivity.SYNONYM_REPLY)?.let{
                 synonym = it
@@ -114,7 +87,9 @@ class MainActivity : AppCompatActivity(), CustomListFragment.OnFragmentInteracti
         }
     }
 
-    override fun onFragmentInteraction(uri: Uri) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onFragmentInteraction(container: Int, fragment: Fragment) {
+        changeFragment(container, fragment, ""+fragment.tag)
     }
+
+
 }

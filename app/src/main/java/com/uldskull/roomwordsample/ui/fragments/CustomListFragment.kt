@@ -1,7 +1,6 @@
 package com.uldskull.roomwordsample.ui.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,14 +24,14 @@ import com.uldskull.roomwordsample.ui.listener.RecyclerViewTouchListener
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CustomListFragment.OnFragmentInteractionListener] interface
+ * [CustomListFragment.OnCustomListFragmentInteractionListener] interface
  * to handle interaction events.
  * Use the [CustomListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class CustomListFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnCustomListFragmentInteractionListener? = null
 
     /**
      * View model
@@ -44,6 +43,7 @@ class CustomListFragment : Fragment() {
 
 
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
+
         wordViewModel.allWords.observe(this, Observer { words ->
             kotlin.run {
                 //  Update the cached copy . The onChanged() method (the default method for
@@ -81,14 +81,15 @@ class CustomListFragment : Fragment() {
         searchRecyclerView =
             activity?.findViewById(R.id.recycler_view_into_fragment) as RecyclerView?
 
-        wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
+
 
         wordViewModel.allWords.observe(viewLifecycleOwner, Observer { words ->
             //  Update the cached copy . The onChanged() method (the default method for
             //  our Lambda) fires when the observed data changes and the activity
             //  is in the foreground.
-            words?.let { adapter?.setWords(it) }
             words?.let { wordsValuesArray = ArrayList(it) }
+            words?.let { adapter?.setWords(wordsValuesArray) }
+
         })
 
         adapter = WordListAdapter(activity as Context)
@@ -221,7 +222,7 @@ class CustomListFragment : Fragment() {
 */
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnCustomListFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -244,9 +245,9 @@ class CustomListFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnCustomListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onFragmentInteraction(container: Int, fragment: Fragment)
     }
 
     companion object {
@@ -259,11 +260,6 @@ class CustomListFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(activity: MainActivity) : CustomListFragment {
-            /*
-            val args = Bundle()
-            args.putInt(ARG_POSITION, 1)
-            fragment.arguments  =args
-            */
 
             return CustomListFragment()
         }
