@@ -72,14 +72,15 @@ abstract class WordRoomDatabase : RoomDatabase() {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
                     scope.launch {
-                        // populateDatabase(database.wordDao())
+                         populateDatabase(database.wordDao())
                     }
                 }
             }
 
             suspend fun populateDatabase(wordDao: WordDao) {
                 // Delete all content
-                wordDao.deleteAll()
+                //wordDao.deleteAll()
+                /*
                 // Add sample words
                 var word = Word(null, "hello")
                 wordDao.insert(word)
@@ -88,6 +89,8 @@ abstract class WordRoomDatabase : RoomDatabase() {
                     "How are you ?"
                 )
                 wordDao.insert(word)
+                */
+
             }
         }
     }

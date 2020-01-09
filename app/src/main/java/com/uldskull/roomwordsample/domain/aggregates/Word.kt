@@ -1,13 +1,14 @@
 // File Word.kt
 // @Author pierre.antoine - 06/01/2020 - No copyright.
 
-package com.uldskull.roomwordsample.domain
+package com.uldskull.roomwordsample.domain.aggregates
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.uldskull.roomwordsample.infrastructure.data.DatabaseContract
-import com.uldskull.roomwordsample.infrastructure.data.DatabaseContract.WordDatabaseEntries.Companion.TABLE_NAME
+import com.uldskull.roomwordsample.infrastructure.data.word.DatabaseContract
+import com.uldskull.roomwordsample.infrastructure.data.word.DatabaseContract.WordDatabaseEntries.Companion.WORD_TABLE_NAME
 
 
 /**
@@ -18,10 +19,12 @@ import com.uldskull.roomwordsample.infrastructure.data.DatabaseContract.WordData
  *   objects from rows in the database.
 class Word(@PrimaryKey @ColumnInfo(name = "word") val word: String)
  **/
-@Entity(tableName = TABLE_NAME)
+@Entity(tableName = WORD_TABLE_NAME)
 data class Word(
 
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
     @ColumnInfo(name = DatabaseContract.WordDatabaseEntries.COLUMN_WORD)
-    val word: String)
+    val word: String,
+    @Embedded
+    val synonym: Synonym)
