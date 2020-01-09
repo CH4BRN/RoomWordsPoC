@@ -19,11 +19,11 @@ import kotlinx.coroutines.launch
 //   we set exportSchema to false here to avoid a build warning.
 //   In a real app, you should consider setting a directory for Room to
 //   use to export the schema so you can check the current schema into your version control system.
-@Database(entities = arrayOf(Word::class), version = 1, exportSchema = false)
-public abstract class WordRoomDatabase : RoomDatabase() {
+@Database(entities = [Word::class], version = 1, exportSchema = false)
+abstract class WordRoomDatabase : RoomDatabase() {
 
 
-    abstract fun WordDao(): WordDao
+    abstract fun wordDao(): WordDao
 
     companion object{
         //Singleton WordRoomDatabase, to prevent having multiple instances of the
@@ -71,14 +71,14 @@ public abstract class WordRoomDatabase : RoomDatabase() {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
                     scope.launch {
-                        populateDatabase(database.WordDao())
+                        populateDatabase(database.wordDao())
                     }
                 }
             }
 
             suspend fun populateDatabase(wordDao: WordDao){
                 // Delete all content
-                wordDao.deleteAll()
+              //  wordDao.deleteAll()
                 // Add sample words
                 var word = Word(null, "hello")
                 wordDao.insert(word)

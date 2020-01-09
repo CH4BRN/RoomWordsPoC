@@ -1,4 +1,4 @@
-package com.uldskull.roomwordsample
+package com.uldskull.roomwordsample.ui.fragments
 
 import android.content.Context
 import android.net.Uri
@@ -11,34 +11,27 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.ListFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.uldskull.roomwordsample.R
 import com.uldskull.roomwordsample.domain.Word
-import com.uldskull.roomwordsample.ui.MainActivity
-import com.uldskull.roomwordsample.ui.WordViewModel
+import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
+import com.uldskull.roomwordsample.ui.activities.MainActivity
 import com.uldskull.roomwordsample.ui.adapter.WordListAdapter
 import com.uldskull.roomwordsample.ui.listener.RecyclerViewTouchListener
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [fragment_list.OnFragmentInteractionListener] interface
+ * [CustomListFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [fragment_list.newInstance] factory method to
+ * Use the [CustomListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class fragment_list : Fragment() {
+class CustomListFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private var listener: OnFragmentInteractionListener? = null
 
     /**
@@ -95,6 +88,7 @@ class fragment_list : Fragment() {
             //  our Lambda) fires when the observed data changes and the activity
             //  is in the foreground.
             words?.let { adapter?.setWords(it) }
+            words?.let { wordsValuesArray = ArrayList(it) }
         })
 
         adapter = WordListAdapter(activity as Context)
@@ -115,7 +109,8 @@ class fragment_list : Fragment() {
             RecyclerViewTouchListener(
                 activity as Context,
                 searchRecyclerView!!,
-                object : ClickListener {
+                object :
+                    ClickListener {
                     override fun onClick(view: View, position: Int) {
                         Toast.makeText(
                             activity, arraySort[position].word,
@@ -159,6 +154,8 @@ class fragment_list : Fragment() {
             ) {
 
                 adapter = WordListAdapter(activity as Context)
+
+
                 wordViewModel.allWords.observe(viewLifecycleOwner, Observer { words ->
                     //  Update the cached copy . The onChanged() method (the default method for
                     //  our Lambda) fires when the observed data changes and the activity
@@ -169,8 +166,8 @@ class fragment_list : Fragment() {
                 textLength = etSearch!!.text.length
                 arraySort.clear()
                 for (i in wordsValuesArray.indices) {
-                    if (textLength <= wordsValuesArray[i].word!!.length) {
-                        if (wordsValuesArray[i].word!!.toLowerCase()
+                    if (textLength <= wordsValuesArray[i].word.length) {
+                        if (wordsValuesArray[i].word.toLowerCase()
                                 .trim().contains(
                                     etSearch!!.text.toString()
                                         .toLowerCase()
@@ -182,6 +179,8 @@ class fragment_list : Fragment() {
                         }
                     }
                 }
+
+                arraySort.let { adapter?.setWords(it) }
 
 
                 searchRecyclerView?.adapter = adapter
@@ -208,21 +207,22 @@ class fragment_list : Fragment() {
      * Initialize the root view
      */
     private fun initView(container: ViewGroup?, inflater: LayoutInflater): View? {
-        initialRootView = inflater.inflate(R.layout.fragment_list, container, false)
+        initialRootView = inflater.inflate(
+            R.layout.fragment_list, container, false)
         return initialRootView
     }
-
+/*
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
         listener?.onFragmentInteraction(uri)
     }
-
+*/
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -252,23 +252,23 @@ class fragment_list : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
          * @return A new instance of fragment fragment_list.
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(activity: MainActivity) : fragment_list{
-            val fragment = fragment_list()
+        fun newInstance(activity: MainActivity) : CustomListFragment {
+            /*
             val args = Bundle()
             args.putInt(ARG_POSITION, 1)
             fragment.arguments  =args
-            return fragment
+            */
+
+            return CustomListFragment()
         }
 
         private lateinit var initialRootView: View
 
-        private const val ARG_POSITION: String = "position"
+        //  private const val ARG_POSITION: String = "position"
         var wordsValuesArray: ArrayList<Word> = ArrayList()
 
 

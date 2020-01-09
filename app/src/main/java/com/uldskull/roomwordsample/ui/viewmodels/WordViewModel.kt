@@ -1,7 +1,7 @@
 // File WordViewModel.kt
 // @Author pierre.antoine - 06/01/2020 - No copyright.
 
-package com.uldskull.roomwordsample.ui
+package com.uldskull.roomwordsample.ui.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -30,7 +30,7 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository
         //   also pass the scope.
-        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).WordDao()
+        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
         repository =
             WordRepository(
                 wordsDao
