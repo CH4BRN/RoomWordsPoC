@@ -25,7 +25,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao
 
-    companion object{
+    companion object {
         //Singleton WordRoomDatabase, to prevent having multiple instances of the
         // database opened at the same time.
         @Volatile
@@ -40,13 +40,14 @@ abstract class WordRoomDatabase : RoomDatabase() {
          */
         fun getDatabase(
             context: Context,
-            scope: CoroutineScope): WordRoomDatabase {
+            scope: CoroutineScope
+        ): WordRoomDatabase {
             val tempInstance =
                 INSTANCE
-            if(tempInstance != null){
+            if (tempInstance != null) {
                 return tempInstance
             }
-            synchronized(this){
+            synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     WordRoomDatabase::class.java,
@@ -66,19 +67,19 @@ abstract class WordRoomDatabase : RoomDatabase() {
 
         private class WordDatabaseCallback(
             private val scope: CoroutineScope
-        ): RoomDatabase.Callback(){
+        ) : RoomDatabase.Callback() {
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
                     scope.launch {
-                        populateDatabase(database.wordDao())
+                        // populateDatabase(database.wordDao())
                     }
                 }
             }
 
-            suspend fun populateDatabase(wordDao: WordDao){
+            suspend fun populateDatabase(wordDao: WordDao) {
                 // Delete all content
-              //  wordDao.deleteAll()
+                wordDao.deleteAll()
                 // Add sample words
                 var word = Word(null, "hello")
                 wordDao.insert(word)
