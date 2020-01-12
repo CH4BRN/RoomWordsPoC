@@ -34,8 +34,6 @@ abstract class WordRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao?
 
-    abstract fun wordWithMetadataDao(): WordMetadataDao
-
     companion object {
         //Singleton WordRoomDatabase, to prevent having multiple instances of the
         // database opened at the same time.
@@ -122,6 +120,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
                 val synonymProducer: (String) -> Synonym
                 synonymProducer = ::Synonym
 
+
                 val wordProducer: (String, Synonym) -> Word
                 wordProducer = { st, sy ->
                     Word(
@@ -130,14 +129,9 @@ abstract class WordRoomDatabase : RoomDatabase() {
                         synonym = sy
                     )
                 }
-
-
                 val word = wordProducer.invoke("Hello ", synonymProducer.invoke("World"))
 
-
                 wordDao?.insert(word)
-
-
             }
         }
     }
