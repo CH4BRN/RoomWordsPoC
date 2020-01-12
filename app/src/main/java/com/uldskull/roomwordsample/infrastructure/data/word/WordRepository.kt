@@ -16,7 +16,7 @@ import com.uldskull.roomwordsample.domain.aggregates.Word
 //  This is because it only needs access to the DAO, since the DAO contains all the
 //  read/write methods for the database. There's no need to expose the entire database
 //  to the repository.
-class WordRepository (private val wordDao: WordDao){
+class WordRepository (private val wordDao: WordDao?){
 
     /**
      * The list of words is a public property. It's initialized by getting the LiveData
@@ -25,13 +25,13 @@ class WordRepository (private val wordDao: WordDao){
      * Room executes all queries on a separate thread. Then observed LiveData will notify
      * the observer on the main thread when the data has changed.
      */
-    val allWords: LiveData<List<Word>> = wordDao.getAlphabetizedWords()
+    val allWords: LiveData<List<Word>>? = wordDao?.getAlphabetizedWords()
 
     /**
      * The suspend modifier tells the compiler that this needs to be called from a
      * coroutine or another suspending function.
      */
     suspend fun insert(word: Word){
-        wordDao.insert(word)
+        wordDao?.insert(word)
     }
 }

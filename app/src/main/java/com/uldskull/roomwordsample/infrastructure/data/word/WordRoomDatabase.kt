@@ -8,14 +8,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.uldskull.roomwordsample.domain.aggregates.Synonym
+import com.uldskull.roomwordsample.domain.aggregates.synonym.Synonym
 import com.uldskull.roomwordsample.domain.aggregates.Word
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
  *   Class "WordRoomDatabase" :
- *   TODO: Fill class use.
+ *   Database class establishes a logical grouping between the DAO interfaces. It also
+ *   defines the required version number, which is used to track and implement database
+ *   migrations.
+ *
+ *   . The class should be abstract and should extend RoomDatabase.
+ *
+ *   . You should follow the singleton design pattern when instantiating an AppDatabase
+ *   object, as each RoomDatabase instance is fairly expensive, and you rarely need
+ *   access to multiple instances.
  **/
 //   we set exportSchema to false here to avoid a build warning.
 //   In a real app, you should consider setting a directory for Room to
@@ -24,7 +32,9 @@ import kotlinx.coroutines.launch
 abstract class WordRoomDatabase : RoomDatabase() {
 
 
-    abstract fun wordDao(): WordDao
+    abstract fun wordDao(): WordDao?
+
+    abstract fun wordWithMetadataDao(): WordMetadataDao
 
     companion object {
         //Singleton WordRoomDatabase, to prevent having multiple instances of the
@@ -42,12 +52,33 @@ abstract class WordRoomDatabase : RoomDatabase() {
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
-        ): WordRoomDatabase {
-            val tempInstance =
-                INSTANCE
-            if (tempInstance != null) {
-                return tempInstance
+        ): WordRoomDatabase? {
+
+            if (INSTANCE != null) {
+                return INSTANCE
             }
+
+            // ONLY FOR TESTING / ! \ NO PERSISTANCE
+
+            synchronized(this) {
+                INSTANCE = Room.inMemoryDatabaseBuilder(
+                    context.applicationContext,
+                    WordRoomDatabase::class.java
+                )
+                    .addCallback(
+                        WordDatabaseCallback(
+                            scope
+                        )
+                    )
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
+
+                return INSTANCE
+            }
+
+/*
+            // "REAL" ROOM DATABASE
+
             synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -62,8 +93,11 @@ abstract class WordRoomDatabase : RoomDatabase() {
                     .addMigrations(MIGRATION_1_2)
                     .build()
                 INSTANCE = instance
-                return instance
+
             }
+
+ */
+            return INSTANCE
         }
 
 
@@ -79,9 +113,10 @@ abstract class WordRoomDatabase : RoomDatabase() {
                 }
             }
 
-            suspend fun populateDatabase(wordDao: WordDao) {
+            suspend fun populateDatabase(wordDao: WordDao?) {
                 // Delete all content
-                wordDao.deleteAll()
+                wordDao?.deleteAll()
+
 
                 // Add sample words
                 val synonymProducer: (String) -> Synonym
@@ -100,7 +135,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
                 val word = wordProducer.invoke("Hello ", synonymProducer.invoke("World"))
 
 
-                wordDao.insert(word)
+                wordDao?.insert(word)
 
 
             }

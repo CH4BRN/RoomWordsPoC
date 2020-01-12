@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uldskull.roomwordsample.R
-import com.uldskull.roomwordsample.domain.aggregates.Synonym
+import com.uldskull.roomwordsample.domain.aggregates.synonym.Synonym
 import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.ui.fragments.CustomListFragment
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
@@ -74,7 +74,9 @@ class MainActivity : AppCompatActivity(), CustomListFragment.OnCustomListFragmen
 
             data?.getStringExtra(NewWordActivity.WORD_REPLY)?.let {
                 val word =
-                    Word(null, it, Synonym(synonym))
+                    Word(null, it,
+                        Synonym(synonym)
+                    )
                 wordViewModel.insert(word)
             }
 

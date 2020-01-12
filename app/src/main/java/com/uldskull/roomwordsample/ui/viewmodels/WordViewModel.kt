@@ -23,19 +23,31 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
     // The ViewModel maintains a reference to the repository to get data.
     private val repository: WordRepository
 
+    // A reference to anothe repository, to test relations
+    private val repositoryWithRelations: WordMetadataRepository
+
     // LiveData gives us updated words when they change. Cache the list of words.
-    val allWords: LiveData<List<Word>>
+    val allWords: LiveData<List<Word>>?
 
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository
         //   also pass the scope.
-        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
+        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope)?.wordDao()
+
         repository =
             WordRepository(
                 wordsDao
             )
         allWords = repository.allWords
+
+        val wordsMetadataDao
+                = WordRoomDatabase.getDatabase(application,viewModelScope)?.wordWithMetadataDao()
+        repositoryWithRelations =
+            WordMetadataRepository(
+                wordsMetadataDao
+            )
+
     }
 
     /**
