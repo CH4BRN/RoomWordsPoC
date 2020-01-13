@@ -12,6 +12,8 @@ import com.uldskull.roomwordsample.RelationExperiment.dao.UserDao
 import com.uldskull.roomwordsample.RelationExperiment.model.*
 
 /**
+ * suivre -> http://tutos-android-france.com/room/
+ *
  *   Class "MyDatabase" :
  *    nous implémentons autant de fonction que d’interface Dao et nous ajoutons les entités
  *    dans les paramètres de l’annotation @Database, ainsi que le numéro la version de notre
