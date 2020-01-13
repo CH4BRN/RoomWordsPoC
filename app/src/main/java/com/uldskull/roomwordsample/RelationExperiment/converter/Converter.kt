@@ -12,11 +12,16 @@ import java.util.*
  **/
 class Converter {
 
+    /**
+     * va convertir le type primitif Long (le timestamp) en Date
+     */
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
         return if (value == null) null else Date(value)
     }
-
+    /**
+     * va convertir le type Date en primitif Long (le timestamp)
+     */
     @TypeConverter
     fun dateToTimestamp(date: Date?): Long? {
         return date?.time

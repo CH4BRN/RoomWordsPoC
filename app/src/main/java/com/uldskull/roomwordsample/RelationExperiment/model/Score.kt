@@ -15,6 +15,8 @@ import androidx.room.PrimaryKey
     ForeignKey(entity = Match::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("matchId"),
+        //  onDelete = ForeignKey.CASCADE qui supprimera les Score associés à un Match si ce
+        //  dernier est supprimé de la base de données
         onDelete = ForeignKey.CASCADE))
 )
 class Score(var label:String, var  scoreTeam1: Int, var scoreteam2: Int, var matchId: Long) {

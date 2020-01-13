@@ -17,6 +17,8 @@ class TeamAllPlayers {
     @Embedded
     var team: Team? = null
 
+    //  La liaison sera faite avec l’annotation @Relation entre le champs ‘id’ d’une Team et
+    //  des Player qui contiennent un champs ‘teamId’ similaire.
     @Relation(parentColumn = "id", entityColumn = "teamId")
     var players: List<Player>? = null
 // TODO : Fill class.

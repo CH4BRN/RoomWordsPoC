@@ -7,6 +7,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import androidx.room.Room
+import com.uldskull.roomwordsample.RelationExperiment.database.MyDatabase
+import com.uldskull.roomwordsample.RelationExperiment.model.Player
 import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.infrastructure.data.word.WordRepository
 import com.uldskull.roomwordsample.infrastructure.data.word.WordRoomDatabase
@@ -41,6 +44,13 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
         allWords = repository.allWords
 
 
+        WordViewModel.database = Room.databaseBuilder(
+            application,
+            MyDatabase::class.java,
+            "championship-db" )
+            .build()
+
+
     }
 
     /**
@@ -52,5 +62,26 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
      */
     fun insert(word: Word) = viewModelScope.launch {
         repository.insert(word)
+    }
+
+
+    fun createPlayer(name:String, position: String, avatar:String): Player{
+        var player = Player(name, position, null)
+        player.avatar = avatar
+        player.id = WordViewModel.database?.userDao()?.insertPlayer(player)
+        return player
+    }
+
+
+    fun getPlayers():List<Player>{
+        var players = WordViewModel.database?.userDao()?.getAllPlayer()
+        if (players != null) {
+            return players
+        }
+        return emptyList()
+    }
+
+    companion object{
+        var database: MyDatabase? = null
     }
 }

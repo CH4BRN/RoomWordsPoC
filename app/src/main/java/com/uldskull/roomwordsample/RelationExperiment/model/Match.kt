@@ -10,7 +10,7 @@ import java.util.*
 
 /**
  *   Class "Match" :
- *   TODO: Fill class use.
+ *   double clé étrangère qui fait référence à deux Team
  **/
 @Entity(foreignKeys = arrayOf(
     ForeignKey(entity = Team::class,

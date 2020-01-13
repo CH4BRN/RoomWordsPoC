@@ -13,12 +13,18 @@ import com.google.gson.reflect.TypeToken
  **/
 class PlayersConverter {
 
+    /**
+     * convertira une une chaine de caractères (au format Json) en liste d’identifiant Player
+     */
     @TypeConverter
     fun stringToPlayers(value: String): List<Long> {
         val listPlayers = object : TypeToken<Long>() {}.type
         return Gson().fromJson(value, listPlayers)
     }
 
+    /**
+     * convertira une liste d’identifiant Player en une chaine de caractères (au format Json)
+     */
     @TypeConverter
     fun playersToString(list: List<Long>): String {
         val gson = Gson()
