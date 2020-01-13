@@ -3,13 +3,19 @@
 
 package com.uldskull.roomwordsample.RelationExperiment.database
 
+import android.content.Context
+import android.util.Log
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.uldskull.roomwordsample.RelationExperiment.converter.Converter
 import com.uldskull.roomwordsample.RelationExperiment.dao.MatchDao
 import com.uldskull.roomwordsample.RelationExperiment.dao.UserDao
 import com.uldskull.roomwordsample.RelationExperiment.model.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * suivre -> http://tutos-android-france.com/room/
@@ -25,7 +31,67 @@ import com.uldskull.roomwordsample.RelationExperiment.model.*
     version = 1)
 @TypeConverters(Converter::class)
 abstract class MyDatabase : RoomDatabase(){
-    abstract fun userDao(): UserDao
+    abstract fun userDao(): UserDao?
     abstract fun matchDao(): MatchDao
-// TODO : Fill class.
+
+    companion object {
+        @Volatile
+        private var INSTANCE: MyDatabase? = null
+
+
+        fun getDatabase(
+            context: Context,
+            scope: CoroutineScope
+        ) : MyDatabase?{
+
+            if (INSTANCE != null) {
+                return INSTANCE
+            }
+
+            synchronized(this){
+                INSTANCE = Room.inMemoryDatabaseBuilder(
+                    context.applicationContext,
+                    MyDatabase::class.java
+                )
+                    .addCallback(
+                        MyDatabaseCallback(
+                            scope
+                        )
+                    )
+                    .allowMainThreadQueries()
+                    .build()
+            }
+            return INSTANCE
+        }
+
+
+        private class MyDatabaseCallback(
+            private val scope: CoroutineScope
+        ) : RoomDatabase.Callback(){
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+              /*
+                INSTANCE?.let { database ->
+
+                    scope.launch {
+                        populateDatabase(database.userDao())
+                    }
+                }
+                */
+
+            }
+
+
+            suspend fun populateDatabase(userDao: UserDao?){
+                userDao?.deleteAll()
+
+
+                var player = Player("Pedrosa","second", null)
+
+                userDao?.insertPlayer(player)
+
+                Log.i("INFO",player.id.toString()+" " + player.name)
+            }
+        }
+    }
 }

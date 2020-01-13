@@ -64,22 +64,17 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
         repository.insert(word)
     }
 
-
+/*
     fun createPlayer(name:String, position: String, avatar:String): Player{
         var player = Player(name, position, null)
         player.avatar = avatar
         player.id = WordViewModel.database?.userDao()?.insertPlayer(player)
         return player
     }
+*/
 
 
-    fun getPlayers():List<Player>{
-        var players = WordViewModel.database?.userDao()?.getAllPlayer()
-        if (players != null) {
-            return players
-        }
-        return emptyList()
-    }
+
 
     companion object{
         var database: MyDatabase? = null

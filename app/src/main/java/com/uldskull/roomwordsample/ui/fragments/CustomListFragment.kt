@@ -44,7 +44,7 @@ class CustomListFragment : Fragment() {
 
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
 
-        wordViewModel.allWords.observe(this, Observer { words ->
+        wordViewModel.allWords?.observe(this, Observer { words ->
             kotlin.run {
                 //  Update the cached copy . The onChanged() method (the default method for
                 //  our Lambda) fires when the observed data changes and the activity
@@ -83,7 +83,7 @@ class CustomListFragment : Fragment() {
 
 
 
-        wordViewModel.allWords.observe(viewLifecycleOwner, Observer { words ->
+        wordViewModel.allWords?.observe(viewLifecycleOwner, Observer { words ->
             //  Update the cached copy . The onChanged() method (the default method for
             //  our Lambda) fires when the observed data changes and the activity
             //  is in the foreground.
@@ -159,7 +159,7 @@ class CustomListFragment : Fragment() {
                 adapter = WordListAdapter(activity as Context)
 
 
-                wordViewModel.allWords.observe(viewLifecycleOwner, Observer { words ->
+                wordViewModel.allWords?.observe(viewLifecycleOwner, Observer { words ->
                     //  Update the cached copy . The onChanged() method (the default method for
                     //  our Lambda) fires when the observed data changes and the activity
                     //  is in the foreground.

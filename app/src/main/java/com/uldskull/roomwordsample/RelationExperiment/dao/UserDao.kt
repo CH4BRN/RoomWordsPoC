@@ -1,5 +1,6 @@
 package com.uldskull.roomwordsample.RelationExperiment.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.uldskull.roomwordsample.RelationExperiment.model.Player
 @Dao
@@ -36,13 +37,18 @@ interface UserDao {
     @Delete
     fun deletePlayer(player: Player)
 
+
+
     /**
      * @Query(« requête »): Opération de lecture d’enregistrement via la définition de requête SQL.
      * Le type retourné peut être, par exemple, un Player, une List<Player> ou même un Cursor
      */
     @Query("SELECT * FROM players")
-    fun getAllPlayer(): List<Player>
+    fun getAllPlayer(): LiveData<List<Player>>
 
     @Query("SELECT * FROM players WHERE id=:playerId")
     fun getPlayer(playerId: Long) : Player
+
+    @Query("DELETE FROM players")
+    suspend fun deleteAll()
 }
