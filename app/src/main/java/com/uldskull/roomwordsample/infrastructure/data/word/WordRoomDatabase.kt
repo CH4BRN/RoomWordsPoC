@@ -115,7 +115,6 @@ abstract class WordRoomDatabase : RoomDatabase() {
                 // Delete all content
                 wordDao?.deleteAll()
 
-
                 // Add sample words
                 val synonymProducer: (String) -> Synonym
                 synonymProducer = ::Synonym

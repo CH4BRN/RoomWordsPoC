@@ -11,7 +11,7 @@ import androidx.room.Ignore
  *   TODO: Fill class use.
  **/
 @Entity(tableName = "players")
-class Player (name:String, var position: String,
+public class Player (name:String, var position: String?,
               var firstTeamId: Long?
 ):User(name){
     @Ignore

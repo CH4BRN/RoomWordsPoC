@@ -11,5 +11,5 @@ import androidx.room.PrimaryKey
  **/
 abstract class User(var name:String){
     @PrimaryKey(autoGenerate = true)
-    var id: Long? = 0
+    var id: Long? = null
 }

@@ -40,15 +40,32 @@ class MainActivity : AppCompatActivity(),
         playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
         initRecyclerView()
 
-        val fab = initFab()
+        val firstFab = initFirstFab()
+
+        val secondFab = initSecondFab()
+
 
         // TODO : Initailize view for players
 
 
     }
 
-    private fun initFab(): FloatingActionButton {
+    private fun initFirstFab(): FloatingActionButton {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+
+            //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            //  startActivityForResult(intent, newWordActivityRequestCode)
+            startActivityForResult(intent, newWordActivityRequestCode)
+
+
+        }
+        return fab
+    }
+
+    private fun initSecondFab(): FloatingActionButton {
+        val fab = findViewById<FloatingActionButton>(R.id.second_fab)
         fab.setOnClickListener {
 
             //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
@@ -79,44 +96,60 @@ class MainActivity : AppCompatActivity(),
         fragmentTransaction.commit()
     }
 
+    fun onNewWordActivityResult(data: Intent?) {
+        var synonym = ""
+
+        data?.getStringExtra(NewWordActivity.SYNONYM_REPLY)?.let {
+            synonym = it
+        }
+
+        data?.getStringExtra(NewWordActivity.WORD_REPLY)?.let {
+            val word =
+                Word(
+                    null, it,
+                    Synonym(synonym)
+                )
+
+            wordViewModel.insert(word)
+
+        }
+    }
+
+    fun onNewPlayerActivityResult(data: Intent?) {
+        var player = ""
+
+        data?.getStringExtra(NewPlayerActivity.PLAYER_REPLY)?.let {
+            player = it
+
+            playerViewModel.insert(Player(player, null, null))
+        }
+        Toast.makeText(
+            applicationContext,
+            player + " created.",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
-
-            var synonym = ""
-
-            data?.getStringExtra(NewWordActivity.SYNONYM_REPLY)?.let {
-                synonym = it
-            }
-
-            data?.getStringExtra(NewWordActivity.WORD_REPLY)?.let {
-                val word =
-                    Word(
-                        null, it,
-                        Synonym(synonym)
-                    )
-
-                wordViewModel.insert(word)
-
-            }
-
+            onNewWordActivityResult(data)
         }
-        if(requestCode == newPlayerActivityRequestCode && resultCode == Activity.RESULT_OK){
-            var player = ""
-
-            data?.getStringExtra(NewPlayerActivity.PLAYER_REPLY)?.let {
-                player = it
-
-                playerViewModel.insert(Player(player, "Oui", null))
-            }
-        } else{
-            Toast.makeText(
-                applicationContext,
-                R.string.empty_not_saved,
-                Toast.LENGTH_LONG
-            ).show()
+        if (requestCode == newPlayerActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            onNewPlayerActivityResult(data)
+        } else {
+            onEditViewEmpty()
         }
+    }
+
+    fun onEditViewEmpty() {
+        Toast.makeText(
+            applicationContext,
+            R.string.empty_not_saved,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     override fun onFragmentInteraction(container: Int, fragment: Fragment) {

@@ -16,8 +16,14 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recycler_view_into_fragment"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_view_for_players"/>
 
 </LinearLayout>

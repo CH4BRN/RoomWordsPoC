@@ -37,9 +37,9 @@ class NewPlayerActivity : AppCompatActivity() {
             } else {
                 val player = editPlayerView.text.toString()
                 replyIntent.putExtra(PLAYER_REPLY, player)
+
+                setResult(Activity.RESULT_OK, replyIntent)
             }
-            val name = editPlayerView.text.toString()
-            replyIntent.putExtra(PLAYER_REPLY, name)
             finish()
         }
 

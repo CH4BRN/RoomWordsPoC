@@ -70,23 +70,28 @@ abstract class MyDatabase : RoomDatabase(){
         ) : RoomDatabase.Callback(){
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
-              /*
+
                 INSTANCE?.let { database ->
 
                     scope.launch {
                         populateDatabase(database.userDao())
                     }
                 }
-                */
+
 
             }
 
 
             suspend fun populateDatabase(userDao: UserDao?){
+                //  Delete all content
                 userDao?.deleteAll()
 
+                val playerProducer: (String, String, Long) -> Player
+                playerProducer = ::Player
 
-                var player = Player("Pedrosa","second", null)
+
+                val player = playerProducer.invoke("George", "Position", null)
+                //  var player = Player("Pedrosa","second", null)
 
                 userDao?.insertPlayer(player)
 
