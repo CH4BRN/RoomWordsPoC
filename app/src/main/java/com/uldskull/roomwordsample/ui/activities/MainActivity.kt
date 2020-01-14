@@ -97,15 +97,20 @@ class MainActivity : AppCompatActivity(),
                         Synonym(synonym)
                     )
 
-                val player =
-                    Player(
-                        it, it, null
-                    )
                 wordViewModel.insert(word)
-                playerViewModel.insert(player)
+
             }
 
-        } else {
+        }
+        if(requestCode == newPlayerActivityRequestCode && resultCode == Activity.RESULT_OK){
+            var player = ""
+
+            data?.getStringExtra(NewPlayerActivity.PLAYER_REPLY)?.let {
+                player = it
+
+                playerViewModel.insert(Player(player, "Oui", null))
+            }
+        } else{
             Toast.makeText(
                 applicationContext,
                 R.string.empty_not_saved,
