@@ -16,12 +16,16 @@ import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.domain.aggregates.synonym.Synonym
 import com.uldskull.roomwordsample.koinExperiment.application.HelloApplication
 import com.uldskull.roomwordsample.koinExperiment.module.helloModule
+import com.uldskull.roomwordsample.koinExperiment.service.HelloService
 import com.uldskull.roomwordsample.ui.fragments.CustomListFragment
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
+import org.koin.core.KoinComponent
 import org.koin.core.context.startKoin
+import org.koin.core.inject
 
 class MainActivity : AppCompatActivity(),
-    CustomListFragment.OnCustomListFragmentInteractionListener {
+    CustomListFragment.OnCustomListFragmentInteractionListener,
+    KoinComponent{
 
     private val newWordActivityRequestCode = 1
     private val newPlayerActivityRequestCode = 2
@@ -32,12 +36,24 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var playerViewModel: PlayerViewModel
 
+    val helloService by inject<HelloService>()
+
+    fun sayHello(){
+        Toast.makeText(
+            applicationContext,
+            helloService.hello() + " called.",
+            Toast.LENGTH_LONG
+        ).show()
+
+    }
     /**
      * Activity LifeCycle
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        initKoin()
 
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
         playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
@@ -47,10 +63,10 @@ class MainActivity : AppCompatActivity(),
 
         val secondFab = initSecondFab()
 
-        initKoin()
+
 
         // TODO : Initailize view for players
-        val helloApplication = HelloApplication()
+
 
 
 
@@ -66,6 +82,7 @@ class MainActivity : AppCompatActivity(),
     private fun initFirstFab(): FloatingActionButton {
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
+            sayHello()
 
             //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
             val intent = Intent(this@MainActivity, NewWordActivity::class.java)
@@ -81,6 +98,7 @@ class MainActivity : AppCompatActivity(),
         val fab = findViewById<FloatingActionButton>(R.id.second_fab)
         fab.setOnClickListener {
 
+            sayHello()
             //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
             val intent = Intent(this@MainActivity, NewPlayerActivity::class.java)
             //  startActivityForResult(intent, newWordActivityRequestCode)
