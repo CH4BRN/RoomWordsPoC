@@ -29,6 +29,9 @@ android {
 }
 
 dependencies {
+
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -62,6 +65,12 @@ dependencies {
 
     // UI
     implementation "com.google.android.material:material:$rootProject.materialVersion"
+
+    // Koin for Kotlin
+    implementation "org.koin:koin-core:$rootProject.koin_version"
+
+    // Koin for Unit tests
+    testCompile "org.koin:koin-test:$rootProject.koin_version"
 
     // Testing
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"

@@ -14,8 +14,11 @@ import com.uldskull.roomwordsample.RelationExperiment.model.Player
 import com.uldskull.roomwordsample.RelationExperiment.viewModel.PlayerViewModel
 import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.domain.aggregates.synonym.Synonym
+import com.uldskull.roomwordsample.koinExperiment.application.HelloApplication
+import com.uldskull.roomwordsample.koinExperiment.module.helloModule
 import com.uldskull.roomwordsample.ui.fragments.CustomListFragment
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
+import org.koin.core.context.startKoin
 
 class MainActivity : AppCompatActivity(),
     CustomListFragment.OnCustomListFragmentInteractionListener {
@@ -44,10 +47,20 @@ class MainActivity : AppCompatActivity(),
 
         val secondFab = initSecondFab()
 
+        initKoin()
 
         // TODO : Initailize view for players
+        val helloApplication = HelloApplication()
 
 
+
+    }
+
+    private fun initKoin(){
+        startKoin {
+            printLogger()
+            modules(helloModule)
+        }
     }
 
     private fun initFirstFab(): FloatingActionButton {
