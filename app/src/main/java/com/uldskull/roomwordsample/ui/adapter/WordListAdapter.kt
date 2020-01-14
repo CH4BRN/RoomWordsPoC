@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.uldskull.roomwordsample.R
-import com.uldskull.roomwordsample.domain.Word
+import com.uldskull.roomwordsample.domain.aggregates.Word
 
 /**
  *   Class "WordListAdapter" :
@@ -34,7 +34,7 @@ class WordListAdapter internal constructor(
      */
     inner class WordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val wordItemView: TextView = itemView.findViewById(R.id.textView_word)
-        val idItemView: TextView = itemView.findViewById(R.id.textView_id)
+        val synonymItemView: TextView = itemView.findViewById(R.id.textView_synonym)
     }
 
     /**
@@ -52,7 +52,7 @@ class WordListAdapter internal constructor(
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
         val current = words[position]
         holder.wordItemView.text = current.word
-        holder.idItemView.text = current.id.toString()
+        holder.synonymItemView.text = current.synonym.value
     }
 
     internal fun setWords(words: List<Word>) {

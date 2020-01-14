@@ -7,9 +7,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.uldskull.roomwordsample.domain.Word
-import com.uldskull.roomwordsample.infrastructure.data.WordRepository
-import com.uldskull.roomwordsample.infrastructure.data.WordRoomDatabase
+import androidx.room.Room
+import com.uldskull.roomwordsample.RelationExperiment.database.MyDatabase
+import com.uldskull.roomwordsample.RelationExperiment.model.Player
+import com.uldskull.roomwordsample.domain.aggregates.Word
+import com.uldskull.roomwordsample.infrastructure.data.word.WordRepository
+import com.uldskull.roomwordsample.infrastructure.data.word.WordRoomDatabase
 import kotlinx.coroutines.launch
 
 /**
@@ -23,19 +26,31 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
     // The ViewModel maintains a reference to the repository to get data.
     private val repository: WordRepository
 
+
+
     // LiveData gives us updated words when they change. Cache the list of words.
-    val allWords: LiveData<List<Word>>
+    val allWords: LiveData<List<Word>>?
 
     init {
         // Gets reference to WordDao from WordRoomDatabase to construct
         // the correct WordRepository
         //   also pass the scope.
-        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope).wordDao()
+        val wordsDao = WordRoomDatabase.getDatabase(application, viewModelScope)?.wordDao()
+
         repository =
             WordRepository(
                 wordsDao
             )
         allWords = repository.allWords
+
+
+        WordViewModel.database = Room.databaseBuilder(
+            application,
+            MyDatabase::class.java,
+            "championship-db" )
+            .build()
+
+
     }
 
     /**
@@ -47,5 +62,21 @@ class WordViewModel(application: Application) :AndroidViewModel(application) {
      */
     fun insert(word: Word) = viewModelScope.launch {
         repository.insert(word)
+    }
+
+/*
+    fun createPlayer(name:String, position: String, avatar:String): Player{
+        var player = Player(name, position, null)
+        player.avatar = avatar
+        player.id = WordViewModel.database?.userDao()?.insertPlayer(player)
+        return player
+    }
+*/
+
+
+
+
+    companion object{
+        var database: MyDatabase? = null
     }
 }

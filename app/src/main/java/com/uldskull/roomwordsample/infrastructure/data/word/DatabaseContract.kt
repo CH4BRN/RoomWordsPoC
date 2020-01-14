@@ -1,4 +1,4 @@
-package com.uldskull.roomwordsample.infrastructure.data
+package com.uldskull.roomwordsample.infrastructure.data.word
 
 import android.provider.BaseColumns
 
@@ -18,14 +18,11 @@ object DatabaseContract {
             /**
              * Table name.
              */
-            const val TABLE_NAME = "word_table"
+            const val WORD_TABLE_NAME = "word_table"
             /**
              * Column name.
              */
             const val COLUMN_WORD = "word"
-
-
         }
-
     }
 }

@@ -45,6 +45,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
+    // Gson
+    implementation "com.google.code.gson:gson:2.8.0"
+
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.archLifecycleVersion"

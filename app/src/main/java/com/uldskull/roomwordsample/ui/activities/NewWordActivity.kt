@@ -13,11 +13,14 @@ class NewWordActivity : AppCompatActivity() {
 
 
     private lateinit var editWordView: EditText
+    private lateinit var editSynonymView: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_word)
         editWordView = findViewById(R.id.edit_word)
+        editSynonymView = findViewById(R.id.edit_synonym)
+
         val  button = findViewById<Button>(R.id.button_save)
 
         button.setOnClickListener{
@@ -27,13 +30,16 @@ class NewWordActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_CANCELED, replyIntent)
             }else {
                 val word = editWordView.text.toString()
-                replyIntent.putExtra(EXTRA_REPLY, word)
+                val synonym = editSynonymView.text.toString()
+                replyIntent.putExtra(WORD_REPLY, word)
+                replyIntent.putExtra(SYNONYM_REPLY, synonym)
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             finish()
         }
     }
     companion object {
-        const val EXTRA_REPLY = "com.example.android.wordlistsql.REPLY"
+        const val WORD_REPLY = "com.example.android.wordlistsql.REPLY"
+        const val SYNONYM_REPLY = "synonym"
     }
 }

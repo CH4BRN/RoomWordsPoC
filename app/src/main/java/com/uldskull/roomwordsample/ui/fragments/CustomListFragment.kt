@@ -1,7 +1,6 @@
 package com.uldskull.roomwordsample.ui.fragments
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +15,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.uldskull.roomwordsample.R
-import com.uldskull.roomwordsample.domain.Word
+import com.uldskull.roomwordsample.RelationExperiment.adapter.PlayerListAdapter
+import com.uldskull.roomwordsample.RelationExperiment.viewModel.PlayerViewModel
+import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
 import com.uldskull.roomwordsample.ui.activities.MainActivity
 import com.uldskull.roomwordsample.ui.adapter.WordListAdapter
@@ -25,44 +26,68 @@ import com.uldskull.roomwordsample.ui.listener.RecyclerViewTouchListener
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [CustomListFragment.OnFragmentInteractionListener] interface
+ * [CustomListFragment.OnCustomListFragmentInteractionListener] interface
  * to handle interaction events.
  * Use the [CustomListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class CustomListFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var listener: OnFragmentInteractionListener? = null
+    private var listener: OnCustomListFragmentInteractionListener? = null
 
     /**
      * View model
      */
     private lateinit var wordViewModel: WordViewModel
 
+    private lateinit var playerViewModel: PlayerViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
-        wordViewModel.allWords.observe(this, Observer { words ->
+
+
+
+
+        playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
+
+
+    }
+
+    fun initPlayerViewModelObservation(){
+        playerViewModel.allPlayers?.observe(viewLifecycleOwner, Observer { players ->
+            kotlin.run {
+                players?.let { playerListAdapter?.setPlayers(it) }
+            }
+        })
+    }
+
+    fun initWordViewModelObservation(){
+        wordViewModel.allWords?.observe(this, Observer { words ->
             kotlin.run {
                 //  Update the cached copy . The onChanged() method (the default method for
                 //  our Lambda) fires when the observed data changes and the activity
                 //  is in the foreground.
-                words?.let { adapter?.setWords(it) }
+                words?.let { wordListAdapter?.setWords(it) }
                 words?.let { arraySort.addAll(it) }
-
-
             }
-
         })
     }
 
-    private var adapter: WordListAdapter? = null
+    private var wordListAdapter: WordListAdapter? = null
+
+    private var playerListAdapter: PlayerListAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initWordViewModelObservation()
+        initPlayerViewModelObservation()
+
         initializeSearchRecyclerView()
+        initializePlayerRecyclerView()
     }
 
     interface ClickListener {
@@ -75,24 +100,53 @@ class CustomListFragment : Fragment() {
 
     private var searchRecyclerView: RecyclerView? = null
 
+    private var playerRecyclerView: RecyclerView? = null
+
     internal var textLength = 0
     private var etSearch: EditText? = null
+
+    /**
+     * Initialize the "simple" player's recycler view
+     */
+    private fun initializePlayerRecyclerView(){
+        // Get the view
+        playerRecyclerView =
+            activity?.findViewById(R.id.recycler_view_for_players) as RecyclerView?
+
+/*
+        playerViewModel.allPlayers?.observe(viewLifecycleOwner, Observer { players ->
+            kotlin.run {
+                players?.let { playerListAdapter?.setPlayers(it) }
+            }
+        })
+*/
+        playerListAdapter = PlayerListAdapter(activity as Context)
+        playerRecyclerView?.adapter = playerListAdapter
+
+        playerRecyclerView?.layoutManager = LinearLayoutManager(
+            activity,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
+    }
+
     private fun initializeSearchRecyclerView() {
         searchRecyclerView =
             activity?.findViewById(R.id.recycler_view_into_fragment) as RecyclerView?
 
-        wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
 
-        wordViewModel.allWords.observe(viewLifecycleOwner, Observer { words ->
+
+        wordViewModel.allWords?.observe(viewLifecycleOwner, Observer { words ->
             //  Update the cached copy . The onChanged() method (the default method for
             //  our Lambda) fires when the observed data changes and the activity
             //  is in the foreground.
-            words?.let { adapter?.setWords(it) }
             words?.let { wordsValuesArray = ArrayList(it) }
+            words?.let { wordListAdapter?.setWords(wordsValuesArray) }
+
         })
 
-        adapter = WordListAdapter(activity as Context)
-        searchRecyclerView?.adapter = adapter
+        wordListAdapter = WordListAdapter(activity as Context)
+        searchRecyclerView?.adapter = wordListAdapter
 
         searchRecyclerView?.layoutManager = LinearLayoutManager(
             activity,
@@ -116,17 +170,19 @@ class CustomListFragment : Fragment() {
                             activity, arraySort[position].word,
                             Toast.LENGTH_SHORT
                         ).show()
-                        val word = Word(
-                            arraySort[position].id,
-                            arraySort[position].word
-                        )
+                        val word =
+                            Word(
+                                arraySort[position].id,
+                                arraySort[position].word,
+                                arraySort[position].synonym
+                            )
 
 
                         //TODO : change fragment
                     }
 
                     override fun onLongClick(view: View?, position: Int) {
-                        val character = adapter!!.getItem(position)
+                        val character = wordListAdapter!!.getItem(position)
 
                         //TODO : change fragment
                     }
@@ -153,14 +209,14 @@ class CustomListFragment : Fragment() {
                 count: Int
             ) {
 
-                adapter = WordListAdapter(activity as Context)
+                wordListAdapter = WordListAdapter(activity as Context)
 
 
-                wordViewModel.allWords.observe(viewLifecycleOwner, Observer { words ->
+                wordViewModel.allWords?.observe(viewLifecycleOwner, Observer { words ->
                     //  Update the cached copy . The onChanged() method (the default method for
                     //  our Lambda) fires when the observed data changes and the activity
                     //  is in the foreground.
-                    words?.let { adapter?.setWords(it) }
+                    words?.let { wordListAdapter?.setWords(it) }
                 })
 
                 textLength = etSearch!!.text.length
@@ -180,10 +236,10 @@ class CustomListFragment : Fragment() {
                     }
                 }
 
-                arraySort.let { adapter?.setWords(it) }
+                arraySort.let { wordListAdapter?.setWords(it) }
 
 
-                searchRecyclerView?.adapter = adapter
+                searchRecyclerView?.adapter = wordListAdapter
                 searchRecyclerView?.layoutManager =
                     LinearLayoutManager(
                         activity,
@@ -203,6 +259,8 @@ class CustomListFragment : Fragment() {
         return initView(container, inflater)
     }
 
+
+
     /**
      * Initialize the root view
      */
@@ -219,7 +277,7 @@ class CustomListFragment : Fragment() {
 */
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
+        if (context is OnCustomListFragmentInteractionListener) {
             listener = context
         } else {
             throw RuntimeException("$context must implement OnFragmentInteractionListener")
@@ -242,9 +300,9 @@ class CustomListFragment : Fragment() {
      * (http://developer.android.com/training/basics/fragments/communicating.html)
      * for more information.
      */
-    interface OnFragmentInteractionListener {
+    interface OnCustomListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun onFragmentInteraction(container: Int, fragment: Fragment)
     }
 
     companion object {
@@ -257,11 +315,6 @@ class CustomListFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(activity: MainActivity) : CustomListFragment {
-            /*
-            val args = Bundle()
-            args.putInt(ARG_POSITION, 1)
-            fragment.arguments  =args
-            */
 
             return CustomListFragment()
         }

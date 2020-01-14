@@ -1,0 +1,15 @@
+suspend fun populateDatabase(wordDao: WordDao) {
+                // Delete all content
+                //wordDao.deleteAll()
+                /*
+                // Add sample words
+                var word = Word(null, "hello")
+                wordDao.insert(word)
+                word = Word(
+                    null,
+                    "How are you ?"
+                )
+                wordDao.insert(word)
+                */
+
+            }
