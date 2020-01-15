@@ -3,6 +3,7 @@
 
 package com.uldskull.roomwordsample.koinExperiment.application
 
+import android.content.Context
 import com.uldskull.roomwordsample.koinExperiment.module.helloModule
 import com.uldskull.roomwordsample.koinExperiment.service.HelloService
 import org.koin.core.KoinComponent
@@ -20,7 +21,11 @@ class HelloApplication : KoinComponent {
 
 
     // Display our data
-    fun sayHello() = println(helloService.hello())
+    fun sayHello():String = helloService.hello()
+
+    fun sayHello(context: Context) = helloService.sayHello(context)
+
+
 }
 
 fun main(){

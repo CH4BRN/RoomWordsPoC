@@ -3,6 +3,8 @@
 
 package com.uldskull.roomwordsample.koinExperiment.service
 
+import android.content.Context
+
 /**
  *   Interface "HelloService" :
  *   TODO: Fill class use.
@@ -10,4 +12,6 @@ package com.uldskull.roomwordsample.koinExperiment.service
 interface HelloService {
 
     fun hello():String
+
+    fun sayHello(context: Context)
 }

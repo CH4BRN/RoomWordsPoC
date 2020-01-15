@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ui.activities.NewWordActivity"></activity>
         <activity android:name=".RelationExperiment.activities.NewPlayerActivity"></activity>
+        <activity android:name=".koinExperiment.activities.KoinExperimentActivity"></activity>
         <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

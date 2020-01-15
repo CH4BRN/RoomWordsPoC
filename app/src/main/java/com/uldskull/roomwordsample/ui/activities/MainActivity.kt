@@ -14,18 +14,12 @@ import com.uldskull.roomwordsample.RelationExperiment.model.Player
 import com.uldskull.roomwordsample.RelationExperiment.viewModel.PlayerViewModel
 import com.uldskull.roomwordsample.domain.aggregates.Word
 import com.uldskull.roomwordsample.domain.aggregates.synonym.Synonym
-import com.uldskull.roomwordsample.koinExperiment.application.HelloApplication
-import com.uldskull.roomwordsample.koinExperiment.module.helloModule
-import com.uldskull.roomwordsample.koinExperiment.service.HelloService
+import com.uldskull.roomwordsample.koinExperiment.activities.KoinExperimentActivity
 import com.uldskull.roomwordsample.ui.fragments.CustomListFragment
 import com.uldskull.roomwordsample.ui.viewmodels.WordViewModel
-import org.koin.core.KoinComponent
-import org.koin.core.context.startKoin
-import org.koin.core.inject
 
 class MainActivity : AppCompatActivity(),
-    CustomListFragment.OnCustomListFragmentInteractionListener,
-    KoinComponent{
+    CustomListFragment.OnCustomListFragmentInteractionListener{
 
     private val newWordActivityRequestCode = 1
     private val newPlayerActivityRequestCode = 2
@@ -36,16 +30,6 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var playerViewModel: PlayerViewModel
 
-    val helloService by inject<HelloService>()
-
-    fun sayHello(){
-        Toast.makeText(
-            applicationContext,
-            helloService.hello() + " called.",
-            Toast.LENGTH_LONG
-        ).show()
-
-    }
     /**
      * Activity LifeCycle
      */
@@ -53,15 +37,15 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initKoin()
-
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
         playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
         initRecyclerView()
 
-        val firstFab = initFirstFab()
+        val leftFab = initLeftFab()
 
-        val secondFab = initSecondFab()
+        val rightFab = initRightFab()
+
+        val centerFab = initCenterFab()
 
 
 
@@ -72,33 +56,30 @@ class MainActivity : AppCompatActivity(),
 
     }
 
-    private fun initKoin(){
-        startKoin {
-            printLogger()
-            modules(helloModule)
-        }
-    }
-
-    private fun initFirstFab(): FloatingActionButton {
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+    private fun initCenterFab(): FloatingActionButton{
+        val fab = findViewById<FloatingActionButton>(R.id.center_fab)
         fab.setOnClickListener {
-            sayHello()
+            val intent = Intent(this@MainActivity, KoinExperimentActivity::class.java)
 
-            //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
-            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
-            //  startActivityForResult(intent, newWordActivityRequestCode)
-            startActivityForResult(intent, newWordActivityRequestCode)
-
-
+            startActivity(intent)
         }
         return fab
     }
 
-    private fun initSecondFab(): FloatingActionButton {
-        val fab = findViewById<FloatingActionButton>(R.id.second_fab)
+    private fun initLeftFab(): FloatingActionButton {
+        val fab = findViewById<FloatingActionButton>(R.id.right_fab)
         fab.setOnClickListener {
+            //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            val intent = Intent(this@MainActivity, NewWordActivity::class.java)
+            //  startActivityForResult(intent, newWordActivityRequestCode)
+            startActivityForResult(intent, newWordActivityRequestCode)
+        }
+        return fab
+    }
 
-            sayHello()
+    private fun initRightFab(): FloatingActionButton {
+        val fab = findViewById<FloatingActionButton>(R.id.left_fab)
+        fab.setOnClickListener {
             //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
             val intent = Intent(this@MainActivity, NewPlayerActivity::class.java)
             //  startActivityForResult(intent, newWordActivityRequestCode)

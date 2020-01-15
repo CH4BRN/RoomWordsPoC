@@ -18,8 +18,8 @@ class NewWordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_word)
-        editWordView = findViewById(R.id.edit_word)
-        editSynonymView = findViewById(R.id.edit_synonym)
+        editWordView = findViewById<EditText>(R.id.edit_word)
+        editSynonymView = findViewById<EditText>(R.id.edit_synonym)
 
         val  button = findViewById<Button>(R.id.button_save)
 
