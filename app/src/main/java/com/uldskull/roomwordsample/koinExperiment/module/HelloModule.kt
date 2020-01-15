@@ -3,6 +3,7 @@
 
 package com.uldskull.roomwordsample.koinExperiment.module
 
+import com.uldskull.roomwordsample.infrastructure.data.word.WordRoomDatabase
 import com.uldskull.roomwordsample.koinExperiment.dataHolder.HelloMessageData
 import com.uldskull.roomwordsample.koinExperiment.service.HelloService
 import com.uldskull.roomwordsample.koinExperiment.service.HelloServiceImpl
@@ -17,9 +18,16 @@ val helloModule = module {
         HelloMessageData()
     }
 
+    single {
+        WordRoomDatabase
+    }
+
+
+
     //  Build HelloServiceImpl with injected instance of HelloMessageData, declared a
     //  singleton of HelloService
     single<HelloService>{
         HelloServiceImpl(get())
     }
+
 }

@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        created = getString(R.string.word_created)
+
         wordViewModel = ViewModelProvider(this).get(WordViewModel::class.java)
         playerViewModel = ViewModelProvider(this).get(PlayerViewModel::class.java)
         initRecyclerView()
@@ -46,18 +48,10 @@ class MainActivity : AppCompatActivity(),
         val rightFab = initRightFab()
 
         val centerFab = initCenterFab()
-
-
-
-        // TODO : Initailize view for players
-
-
-
-
     }
 
     private fun initCenterFab(): FloatingActionButton{
-        val fab = findViewById<FloatingActionButton>(R.id.center_fab)
+        val fab = findViewById<FloatingActionButton>(R.id.fab_main_center)
         fab.setOnClickListener {
             val intent = Intent(this@MainActivity, KoinExperimentActivity::class.java)
 
@@ -67,7 +61,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun initLeftFab(): FloatingActionButton {
-        val fab = findViewById<FloatingActionButton>(R.id.right_fab)
+        val fab = findViewById<FloatingActionButton>(R.id.fab_main_right)
         fab.setOnClickListener {
             //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
             val intent = Intent(this@MainActivity, NewWordActivity::class.java)
@@ -78,7 +72,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun initRightFab(): FloatingActionButton {
-        val fab = findViewById<FloatingActionButton>(R.id.left_fab)
+        val fab = findViewById<FloatingActionButton>(R.id.fab_main_left)
         fab.setOnClickListener {
             //   val intent = Intent(this@MainActivity, NewWordActivity::class.java)
             val intent = Intent(this@MainActivity, NewPlayerActivity::class.java)
@@ -108,7 +102,7 @@ class MainActivity : AppCompatActivity(),
         fragmentTransaction.commit()
     }
 
-    fun onNewWordActivityResult(data: Intent?) {
+    private fun onNewWordActivityResult(data: Intent?) {
         var synonym = ""
 
         data?.getStringExtra(NewWordActivity.SYNONYM_REPLY)?.let {
@@ -127,7 +121,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    fun onNewPlayerActivityResult(data: Intent?) {
+    private fun onNewPlayerActivityResult(data: Intent?) {
         var player = ""
 
         data?.getStringExtra(NewPlayerActivity.PLAYER_REPLY)?.let {
@@ -135,12 +129,10 @@ class MainActivity : AppCompatActivity(),
 
             playerViewModel.insert(Player(player, null, null))
         }
-        Toast.makeText(
-            applicationContext,
-            player + " created.",
-            Toast.LENGTH_LONG
-        ).show()
+        Toast.makeText(applicationContext, "$player $created", Toast.LENGTH_LONG).show()
     }
+
+    private var created:String?=null
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -156,7 +148,7 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    fun onEditViewEmpty() {
+    private fun onEditViewEmpty() {
         Toast.makeText(
             applicationContext,
             R.string.empty_not_saved,

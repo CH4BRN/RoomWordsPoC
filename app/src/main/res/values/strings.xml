@@ -3,6 +3,9 @@
     <string name="hint_word">Word...</string>
     <string name="button_save">Save</string>
     <string name="empty_not_saved"> not saved because it is empty.</string>
+    <string name="word_created">created. </string>
+    <string name="player">Player ...</string>
+    <string name="synonym">Synonym...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

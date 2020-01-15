@@ -32,6 +32,7 @@ fun main(){
     startKoin {
         printLogger()
         modules(helloModule)
+
     }
 
     HelloApplication().sayHello()

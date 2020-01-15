@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Exemple de Room avec des mots</string>
+    <string name="hint_word">Mot ...</string>
+    <string name="button_save">Sauver</string>
+    <string name="empty_not_saved">Non sauvé parce que vide.</string>
+    <string name="word_created">Créé.</string>
+    <string name="player">Joueur ...</string>
+    <string name="synonym">Synonyme ...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+</resources>

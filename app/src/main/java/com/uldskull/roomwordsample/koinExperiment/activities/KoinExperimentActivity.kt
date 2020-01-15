@@ -4,15 +4,14 @@
 package com.uldskull.roomwordsample.koinExperiment.activities
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uldskull.roomwordsample.R
 import com.uldskull.roomwordsample.koinExperiment.application.HelloApplication
 import com.uldskull.roomwordsample.koinExperiment.module.helloModule
+import com.uldskull.roomwordsample.koinExperiment.viewModel.KoinExperimentViewModel
 import org.koin.core.context.startKoin
 
 
@@ -26,26 +25,34 @@ class KoinExperimentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_koin_experiment)
 
-
+        koinExperimentViewModel =
+            ViewModelProvider(this).get(KoinExperimentViewModel::class.java)
+/*
         startKoin {
             modules(helloModule)
         }
+*/
 
 
         val fab_left = initLeftFab()
         val fab_right = initRightFab()
         textView_helloServiceValue = initTextViewHelloServiceValue()
 
+
+
     }
 
-    fun sayHello() = HelloApplication().sayHello(application)
+    private lateinit var koinExperimentViewModel: KoinExperimentViewModel
+
+   // fun sayHello() = HelloApplication().sayHello(application)
 
 
     private fun initLeftFab(): FloatingActionButton {
         val fab = findViewById<FloatingActionButton>(R.id.koin_left_fab)
         fab.setOnClickListener {
             textView_helloServiceValue.text = HelloApplication().sayHello()
-            sayHello()
+            // sayHello()
+            koinExperimentViewModel.koinFunction()
         }
 
 

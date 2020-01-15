@@ -49,7 +49,7 @@ abstract class WordRoomDatabase : RoomDatabase() {
          */
         fun getDatabase(
             context: Context,
-            scope: CoroutineScope
+            scope: CoroutineScope?
         ): WordRoomDatabase? {
 
             if (INSTANCE != null) {
@@ -100,12 +100,12 @@ abstract class WordRoomDatabase : RoomDatabase() {
 
 
         private class WordDatabaseCallback(
-            private val scope: CoroutineScope
+            private val scope: CoroutineScope?
         ) : RoomDatabase.Callback() {
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
                 INSTANCE?.let { database ->
-                    scope.launch {
+                    scope?.launch {
                         populateDatabase(database.wordDao())
                     }
                 }

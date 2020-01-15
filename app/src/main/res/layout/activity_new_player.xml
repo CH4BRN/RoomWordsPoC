@@ -11,7 +11,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-light"
-        android:hint="Player ..."
+        android:hint="@string/player"
         android:inputType="textAutoComplete"
         android:padding="8dp"
         android:textSize="16sp" />

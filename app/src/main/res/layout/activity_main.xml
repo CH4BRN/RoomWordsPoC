@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/right_fab"
+        android:id="@+id/fab_main_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -38,17 +38,17 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/center_fab"
+        android:id="@+id/fab_main_center"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/left_fab"
-        app:layout_constraintEnd_toStartOf="@id/right_fab"/>
+        app:layout_constraintStart_toEndOf="@id/fab_main_left"
+        app:layout_constraintEnd_toStartOf="@id/fab_main_right"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/left_fab"
+        android:id="@+id/fab_main_left"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
