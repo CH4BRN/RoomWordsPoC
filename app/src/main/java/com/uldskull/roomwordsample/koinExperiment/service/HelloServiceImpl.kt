@@ -5,7 +5,7 @@ package com.uldskull.roomwordsample.koinExperiment.service
 
 import android.content.Context
 import android.widget.Toast
-import com.uldskull.roomwordsample.koinExperiment.dataHolder.HelloMessageData
+import com.uldskull.roomwordsample.koinExperiment.SimpleKoin.dataHolder.HelloMessageData
 
 /**
  *   Class "HelloServiceImpl" :

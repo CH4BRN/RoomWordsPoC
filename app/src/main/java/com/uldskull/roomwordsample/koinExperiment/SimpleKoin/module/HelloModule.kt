@@ -1,10 +1,10 @@
 // File HelloModule.kt
 // @Author errei - 14/01/2020 - No copyright.
 
-package com.uldskull.roomwordsample.koinExperiment.module
+package com.uldskull.roomwordsample.koinExperiment.SimpleKoin.module
 
 import com.uldskull.roomwordsample.infrastructure.data.word.WordRoomDatabase
-import com.uldskull.roomwordsample.koinExperiment.dataHolder.HelloMessageData
+import com.uldskull.roomwordsample.koinExperiment.SimpleKoin.dataHolder.HelloMessageData
 import com.uldskull.roomwordsample.koinExperiment.service.HelloService
 import com.uldskull.roomwordsample.koinExperiment.service.HelloServiceImpl
 import org.koin.dsl.module

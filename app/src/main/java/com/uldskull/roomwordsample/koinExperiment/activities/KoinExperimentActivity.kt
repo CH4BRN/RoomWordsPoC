@@ -9,10 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.uldskull.roomwordsample.R
-import com.uldskull.roomwordsample.koinExperiment.application.HelloApplication
-import com.uldskull.roomwordsample.koinExperiment.module.helloModule
+import com.uldskull.roomwordsample.koinExperiment.SimpleKoin.application.HelloApplication
 import com.uldskull.roomwordsample.koinExperiment.viewModel.KoinExperimentViewModel
-import org.koin.core.context.startKoin
 
 
 /**
